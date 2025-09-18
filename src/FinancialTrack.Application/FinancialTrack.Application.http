@@ -1,6 +1,0 @@
-@FinancialTrack.Application_HostAddress = http://localhost:5299
-
-GET {{FinancialTrack.Application_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
