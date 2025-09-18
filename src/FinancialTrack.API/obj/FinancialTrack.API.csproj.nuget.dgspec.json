@@ -263,7 +263,11 @@
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Application\\FinancialTrack.Application.csproj": {
+                "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Application\\FinancialTrack.Application.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
