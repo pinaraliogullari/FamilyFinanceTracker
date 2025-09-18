@@ -33,6 +33,22 @@
             "related": ".pdb;.xml"
           }
         }
+      },
+      "FinancialTrack.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.OpenApi": "9.0.9"
+        },
+        "compile": {
+          "bin/placeholder/FinancialTrack.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FinancialTrack.Domain.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -67,10 +83,16 @@
         "microsoft.openapi.1.6.17.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
+    },
+    "FinancialTrack.Domain/1.0.0": {
+      "type": "project",
+      "path": "../FinancialTrack.Domain/FinancialTrack.Domain.csproj",
+      "msbuildProject": "../FinancialTrack.Domain/FinancialTrack.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "FinancialTrack.Domain >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.9"
     ]
   },
@@ -106,7 +128,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj": {
+              "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
