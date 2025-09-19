@@ -12,7 +12,7 @@ public class RoleConfiguration:IEntityTypeConfiguration<Role>
         builder.Property(r=>r.CreatedDate).IsRequired();
 
 
-        builder.HasMany<User>()
+        builder.HasMany(r=>r.Users)
             .WithOne(u => u.Role)
             .HasForeignKey(u => u.RoleId);
     }

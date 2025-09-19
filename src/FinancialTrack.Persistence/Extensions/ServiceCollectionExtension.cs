@@ -2,12 +2,14 @@ using FinancialTrack.Application.Repositories.CategoryRepository;
 using FinancialTrack.Application.Repositories.FinancialRecordRepository;
 using FinancialTrack.Application.Repositories.RoleRepository;
 using FinancialTrack.Application.Repositories.UserRepository;
+using FinancialTrack.Application.UoW;
 using FinancialTrack.Domain.Options;
 using FinancialTrack.Persistence.Context;
 using FinancialTrack.Persistence.Repositories.CategoryRepositories;
 using FinancialTrack.Persistence.Repositories.FinancialRecordRepositories;
 using FinancialTrack.Persistence.Repositories.RoleRepositories;
 using FinancialTrack.Persistence.Repositories.UserRepositories;
+using FinancialTrack.Persistence.UoW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,14 +29,15 @@ public static class ServiceCollectionExtension
             options.UseNpgsql(dbSettings.PostgresConn);
         });
 
-        services.AddScoped<IUserReadRepository, UserReadRepository>();
-        services.AddScoped<IUserWriteRepository, UserWriteRepository>();
-        services.AddScoped<IRoleReadRepository, RoleReadRepository>();
-        services.AddScoped<IRoleWriteRepository,RoleWriteRepository>();
-        services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
-        services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
-        services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
-        services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
+        services.AddScoped<IUnitofWork, UnitofWork>();
+        //services.AddScoped<IUserReadRepository, UserReadRepository>();
+        //services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+        //services.AddScoped<IRoleReadRepository, RoleReadRepository>();
+        //services.AddScoped<IRoleWriteRepository,RoleWriteRepository>();
+        //services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
+        //services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
+        //services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
+        //services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
         return services;
     }
 }

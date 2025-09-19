@@ -27,6 +27,5 @@ public class WriteRepository<T> : IWriteRepository<T> where T : BaseEntity
     public void Remove(T entity)
         => Table.Remove(entity);
 
-    public async Task<int> SaveChangesAsync()
-        => await _dbContext.SaveChangesAsync();
+  
 }

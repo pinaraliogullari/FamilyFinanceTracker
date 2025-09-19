@@ -3,6 +3,7 @@ using System;
 using FinancialTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinancialTrack.Persistence.Migrations
 {
     [DbContext(typeof(FinancialTrackDbContext))]
-    partial class FinancialTrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250919070758_UserFollowEntity")]
+    partial class UserFollowEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,6 +171,9 @@ namespace FinancialTrack.Persistence.Migrations
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("RoleId1")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("UpdatedById")
                         .HasColumnType("bigint");
 
@@ -177,6 +183,8 @@ namespace FinancialTrack.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("RoleId1");
 
                     b.ToTable("Users");
                 });
@@ -218,10 +226,14 @@ namespace FinancialTrack.Persistence.Migrations
             modelBuilder.Entity("FinancialTrack.Domain.Entities.User", b =>
                 {
                     b.HasOne("FinancialTrack.Domain.Entities.Role", "Role")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("FinancialTrack.Domain.Entities.Role", null)
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId1");
 
                     b.Navigation("Role");
                 });
