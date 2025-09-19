@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/CtGVko5d6o=",
+  "dgSpecHash": "VtmeTlhWRZI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Application\\FinancialTrack.Application.csproj",
+  "projectFilePath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Application\\FinancialTrack.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
     "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj": {}
+    "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj": {
+    "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj",
         "projectName": "FinancialTrack.Domain",
-        "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj",
+        "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Domain\\FinancialTrack.Domain.csproj",
         "packagesPath": "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FinancialTrack\\src\\FinancialTrack.Domain\\obj\\",
+        "outputPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
