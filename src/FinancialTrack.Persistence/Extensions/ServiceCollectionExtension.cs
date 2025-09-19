@@ -30,15 +30,17 @@ public static class ServiceCollectionExtension
             var dbSettings = sp.GetRequiredService<IOptions<ConnectionStrings>>().Value;
             options.UseNpgsql(dbSettings.PostgresConn);
         });
-
-
-        services.AddScoped<IUnitofWork, UnitofWork>();
-
-        //generic 
-        //farklı bir db olursa o da aşağıdaki gibi eklenebilir.
-        services.AddScoped<IGenericUnitofWork<FinancialTrackDbContext>, GenericUnitofWork<FinancialTrackDbContext>>();
-
-
+        
+        services.AddScoped(typeof(IGenericUnitofWork<>), typeof(GenericUnitofWork<>));
+        services.AddScoped<IUserReadRepository, UserReadRepository>();
+        services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+        services.AddScoped<IRoleReadRepository, RoleReadRepository>();
+        services.AddScoped<IRoleWriteRepository, RoleWriteRepository>();
+        services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
+        services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
+        services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
+        services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
+        
         return services;
     }
 }

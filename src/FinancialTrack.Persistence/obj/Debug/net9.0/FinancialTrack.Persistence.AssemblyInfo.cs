@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FinancialTrack.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1503065f638a898337f1f5a00cd08b8bf1d21dd3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d00157f907f60a43b4b2eb010b467410bbe148b7")]
 [assembly: System.Reflection.AssemblyProductAttribute("FinancialTrack.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FinancialTrack.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
