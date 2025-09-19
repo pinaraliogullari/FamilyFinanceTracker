@@ -28,6 +28,7 @@ public class UnitofWork : IUnitofWork
     private ICategoryWriteRepository? _categoryWriteRepository;
     private IFinancialRecordReadRepository? _financialRecordReadRepository;
     private IFinancialRecordWriteRepository? _financialRecordWriteRepository;
+    
 
     public IUserReadRepository UserRead => _userReadRepository ??= new UserReadRepository(_dbContext);
     public IUserWriteRepository UserWrite => _userWriteRepository ??= new UserWriteRepository(_dbContext);

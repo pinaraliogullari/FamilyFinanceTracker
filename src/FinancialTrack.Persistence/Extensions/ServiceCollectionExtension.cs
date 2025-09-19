@@ -1,3 +1,4 @@
+using FinancialTrack.Application.Repositories;
 using FinancialTrack.Application.Repositories.CategoryRepository;
 using FinancialTrack.Application.Repositories.FinancialRecordRepository;
 using FinancialTrack.Application.Repositories.RoleRepository;
@@ -5,6 +6,7 @@ using FinancialTrack.Application.Repositories.UserRepository;
 using FinancialTrack.Application.UoW;
 using FinancialTrack.Domain.Options;
 using FinancialTrack.Persistence.Context;
+using FinancialTrack.Persistence.Repositories;
 using FinancialTrack.Persistence.Repositories.CategoryRepositories;
 using FinancialTrack.Persistence.Repositories.FinancialRecordRepositories;
 using FinancialTrack.Persistence.Repositories.RoleRepositories;
@@ -29,15 +31,14 @@ public static class ServiceCollectionExtension
             options.UseNpgsql(dbSettings.PostgresConn);
         });
 
+
         services.AddScoped<IUnitofWork, UnitofWork>();
-        //services.AddScoped<IUserReadRepository, UserReadRepository>();
-        //services.AddScoped<IUserWriteRepository, UserWriteRepository>();
-        //services.AddScoped<IRoleReadRepository, RoleReadRepository>();
-        //services.AddScoped<IRoleWriteRepository,RoleWriteRepository>();
-        //services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
-        //services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
-        //services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
-        //services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
+
+        //generic 
+        //farklı bir db olursa o da aşağıdaki gibi eklenebilir.
+        services.AddScoped<IGenericUnitofWork<FinancialTrackDbContext>, GenericUnitofWork<FinancialTrackDbContext>>();
+
+
         return services;
     }
 }
