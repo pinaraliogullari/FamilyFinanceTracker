@@ -1,3 +1,4 @@
+using FinancialTrack.Application.Repositories.CategoryRepository;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.FinancialRecord.Commands.CreateFinancialRecord;
@@ -5,6 +6,7 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Commands.CreateFin
 public class CreateFinancialRecordCommandHandler : IRequestHandler<CreateFinancialRecordCommandRequest,
     CreateFinancialRecordCommandResponse>
 {
+
     public Task<CreateFinancialRecordCommandResponse> Handle(CreateFinancialRecordCommandRequest request,
         CancellationToken cancellationToken)
     {

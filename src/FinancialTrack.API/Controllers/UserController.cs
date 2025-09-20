@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
-public class UserController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class UserController : ControllerBase
 {
-    // GET
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        return View();
+        return Ok();
     }
 }

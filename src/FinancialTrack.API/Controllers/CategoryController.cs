@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class CategoryController : Controller
 {
-    // GET
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        return View();
+        return Ok();
     }
 }

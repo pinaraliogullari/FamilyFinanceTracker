@@ -1,5 +1,6 @@
 using FinancialTrack.API.Middlewares;
 using FinancialTrack.Application.Extensions;
+using FinancialTrack.Infrastructure.Extensions;
 using FinancialTrack.Persistence.Extensions;
 using Serilog;
 
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 //logger
 Log.Logger = new LoggerConfiguration()
