@@ -1,3 +1,4 @@
+using FinancialTrack.Application.Features.User.Commands.CreateUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +16,10 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    [Route("create-user")]
+    public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
     {
-        return Ok();
+        var response=await _mediator.Send(request);
+        return Ok(response);
     }
 }

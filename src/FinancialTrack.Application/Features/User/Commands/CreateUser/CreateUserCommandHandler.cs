@@ -1,9 +1,10 @@
 using FinancialTrack.Application.Services;
+using FinancialTrack.Application.Wrappers;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Commands.CreateUser;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, ApiResult<CreateUserCommandResponse>>
 {
     private readonly IUserService _userService;
 
@@ -12,7 +13,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest
         _userService = userService;
     }
 
-    public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request,
+    public async Task<ApiResult<CreateUserCommandResponse>> Handle(CreateUserCommandRequest request,
         CancellationToken cancellationToken)
     {
         var createUserModel = new DTOs.CreateUser()
@@ -23,7 +24,14 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest
             Password = request.Password,
             ConfirmPassword = request.ConfirmPassword,
         };
-        var result = await _userService.CreateUserAsync(createUserModel);
-        throw new NotImplementedException();
+        var response = await _userService.CreateUserAsync(createUserModel);
+        var createUserCommandResponse = new CreateUserCommandResponse()
+        {
+            Id = response.Id,
+            Email = response.Email,
+            Firstname = response.Firstname,
+            Lastname = response.Lastname,
+        };
+        return ApiResult<CreateUserCommandResponse>.SuccessResult(createUserCommandResponse);
     }
 }

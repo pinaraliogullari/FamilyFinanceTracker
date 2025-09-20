@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "xENWAQCgzuA=",
+  "dgSpecHash": "CkyiG1BSP8Y=",
   "success": true,
   "projectFilePath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Persistence\\FinancialTrack.Persistence.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+    "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.11.0\\fluentvalidation.dependencyinjectionextensions.11.11.0.nupkg.sha512",
     "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
-    "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
-    "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
+    "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr\\12.5.0\\mediatr.12.5.0.nupkg.sha512",
+    "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.0.0\\mediatr.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
     "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\PinarAliogullariKaya\\.nuget\\packages\\microsoft.build.framework\\17.8.3\\microsoft.build.framework.17.8.3.nupkg.sha512",
