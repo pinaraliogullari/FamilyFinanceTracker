@@ -47,8 +47,13 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    private static IServiceCollection CacheSettings(this IServiceCollection services)
+    private static IServiceCollection CacheSettings(this IServiceCollection services,IConfiguration configuration)
     {
+        var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = $"{cacheSettings.Host}:{cacheSettings.Port}";
+        });
         return services;
     }
 
@@ -56,7 +61,7 @@ public static class ServiceCollectionExtension
         IConfiguration configuration)
     {
         services.JwtAuthenticationSettings(configuration);
-        services.CacheSettings();
+        services.CacheSettings(configuration);
         services.ConfigurationSettings(configuration);
         services.AddScoped<ITokenService, TokenService>();
 
