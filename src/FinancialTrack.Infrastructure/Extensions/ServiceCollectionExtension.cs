@@ -47,7 +47,7 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    private static IServiceCollection CacheSettings(this IServiceCollection services,IConfiguration configuration)
+    private static IServiceCollection CacheSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
         services.AddStackExchangeRedisCache(options =>
@@ -64,6 +64,7 @@ public static class ServiceCollectionExtension
         services.CacheSettings(configuration);
         services.ConfigurationSettings(configuration);
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICacheService, CacheService>();
 
         return services;
     }
