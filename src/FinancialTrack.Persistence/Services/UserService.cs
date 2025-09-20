@@ -16,10 +16,12 @@ public class UserService : IUserService
 
     public UserService
     (
+        IUserReadRepository userReadRepository,
         IUserWriteRepository userWriteRepository,
         IGenericUnitofWork<FinancialTrackDbContext> uow
     )
     {
+        _userReadRepository=userReadRepository;
         _userWriteRepository = userWriteRepository;
         _uow = uow;
     }
@@ -29,7 +31,7 @@ public class UserService : IUserService
         if (model.Password != model.ConfirmPassword)
             throw new InvalidOperationException("Password and ConfirmPassword does not match");
         
-        var user=_userReadRepository.GetWhere(u => u.Email == model.Email);
+        var user= _userReadRepository.GetWhere(u => u.Email == model.Email).FirstOrDefault();
         if (user != null)
             throw new InvalidOperationException($"User with email {model.Email} has already been created");
             
@@ -40,6 +42,7 @@ public class UserService : IUserService
             LastName = model.Lastname,
             Email = model.Email,
             Password = hashPassword,
+            RoleId = 1,
         };
         await _userWriteRepository.AddAsync(newUser);
         await _uow.SaveChangesAsync();

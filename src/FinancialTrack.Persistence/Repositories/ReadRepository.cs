@@ -12,7 +12,7 @@ public class ReadRepository<T> : IReadRepository<T> where T : BaseEntity
 
     public ReadRepository(FinancialTrackDbContext dbContext)
     {
-        _dbContext = dbContext;
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
     public DbSet<T> Table => _dbContext.Set<T>();
