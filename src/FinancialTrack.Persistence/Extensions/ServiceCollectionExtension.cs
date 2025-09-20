@@ -1,16 +1,16 @@
-using FinancialTrack.Application.Repositories;
 using FinancialTrack.Application.Repositories.CategoryRepository;
 using FinancialTrack.Application.Repositories.FinancialRecordRepository;
 using FinancialTrack.Application.Repositories.RoleRepository;
 using FinancialTrack.Application.Repositories.UserRepository;
+using FinancialTrack.Application.Services;
 using FinancialTrack.Application.UoW;
 using FinancialTrack.Domain.Options;
 using FinancialTrack.Persistence.Context;
-using FinancialTrack.Persistence.Repositories;
 using FinancialTrack.Persistence.Repositories.CategoryRepositories;
 using FinancialTrack.Persistence.Repositories.FinancialRecordRepositories;
 using FinancialTrack.Persistence.Repositories.RoleRepositories;
 using FinancialTrack.Persistence.Repositories.UserRepositories;
+using FinancialTrack.Persistence.Services;
 using FinancialTrack.Persistence.UoW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +30,7 @@ public static class ServiceCollectionExtension
             var dbSettings = sp.GetRequiredService<IOptions<ConnectionStrings>>().Value;
             options.UseNpgsql(dbSettings.PostgresConn);
         });
-        
+
         services.AddScoped(typeof(IGenericUnitofWork<>), typeof(GenericUnitofWork<>));
         services.AddScoped<IUserReadRepository, UserReadRepository>();
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
@@ -40,7 +40,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
         services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
         services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
-        
+        services.AddScoped<IUserService, UserService>();
+
         return services;
     }
 }

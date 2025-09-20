@@ -38,6 +38,11 @@ public class GlobalExceptionHandler : IMiddleware
             _logger.LogWarning(ex, "{Source}:{ErrorMessage}", ex.Source, ex.Message);
             await HandleException(context, HttpStatusCode.ServiceUnavailable, ex.Message);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "InvalidOperation:{ErrorMessage}", ex.Message);
+            await HandleException(context, HttpStatusCode.Conflict, ex.Message);
+        }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Service Error:{ErrorMessage}", ex.Message);

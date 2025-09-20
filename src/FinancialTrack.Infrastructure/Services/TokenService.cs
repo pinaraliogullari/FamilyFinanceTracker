@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace FinancialTrack.Infrastructure.Services;
 
 public class TokenService : ITokenService
+
 {
     private readonly JwtSettings _jwtSettings;
     private readonly ICacheService _cacheService;
