@@ -1,3 +1,4 @@
+using FinancialTrack.Application.Features.User.Commands.UpdateUserRole;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,11 @@ public class RoleController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index()
+    [HttpPost]
+    [Route("update-role")]
+    public async Task<IActionResult> UpdateRole(UpdateUserRoleCommandRequest request)
     {
-        return Ok();
+        var response = await _mediator.Send(request);
+        return Ok(response);
     }
 }

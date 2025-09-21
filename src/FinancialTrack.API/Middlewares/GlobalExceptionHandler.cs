@@ -46,8 +46,13 @@ public class GlobalExceptionHandler : IMiddleware
         }
         catch (AuthenticationFailedException ex)
         {
-            _logger.LogWarning(ex, "NotFound:{ErrorMessage}", ex.Message);
+            _logger.LogWarning(ex, "Authentication Failed:{ErrorMessage}", ex.Message);
             await HandleException(context, HttpStatusCode.Unauthorized, ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogWarning(ex, "NotFound:{ErrorMessage}", ex.Message);
+            await HandleException(context, HttpStatusCode.NotFound, ex.Message);
         }
         catch (FluentValidation.ValidationException ex)
         {
