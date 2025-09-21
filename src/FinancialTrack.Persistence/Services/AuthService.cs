@@ -13,23 +13,31 @@ namespace FinancialTrack.Persistence.Services;
 
 public class AuthService : IAuthService
 {
-    public AuthService(IUserReadRepository userReadRepository, IRoleReadRepository roleReadRepository, ITokenService tokenService)
+    private readonly IUserReadRepository _userReadRepository;
+    private readonly IRoleReadRepository _roleReadRepository;
+    private readonly ITokenService _tokenService;
+    private readonly ICurrentUserService _currentUserService;
+
+    public AuthService
+    (
+        IUserReadRepository userReadRepository,
+        IRoleReadRepository roleReadRepository,
+        ITokenService tokenService,
+        ICurrentUserService currentUserService
+    )
     {
         _userReadRepository = userReadRepository;
         _roleReadRepository = roleReadRepository;
         _tokenService = tokenService;
+        _currentUserService = currentUserService;
     }
-
-    private readonly IUserReadRepository _userReadRepository;
-    private readonly IRoleReadRepository _roleReadRepository;
-    private readonly ITokenService _tokenService;
 
     public async Task<LoginUserResponse> LoginAsync(LoginUser model)
     {
         var user = _userReadRepository.GetWhere(x => x.Email == model.Email).FirstOrDefault();
         if (user == null || !PasswordHasher.Verify(model.Password, user.Password))
             throw new AuthenticationFailedException();
-        
+
         var role = await _roleReadRepository.GetWhere(r => r.Id == user.RoleId)
             .FirstOrDefaultAsync();
         var claims = new[]
@@ -38,7 +46,7 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimKey.UserId, user.Id.ToString()),
             new Claim(ClaimKey.Email, user.Email),
-            new Claim(ClaimKey.Role, role.Name)//burası null olduğu için token servise girmiyor olabilir
+            new Claim(ClaimKey.Role, role.Name) //burası null olduğu için token servise girmiyor olabilir
         };
         var token = await _tokenService.CreateAccessTokenAsync(claims);
         return new LoginUserResponse()
@@ -47,8 +55,13 @@ public class AuthService : IAuthService
         };
     }
 
-    public Task LogoutAsync()
+    public async Task LogoutAsync()
     {
+        var accessToken = _currentUserService.Token;
+        var userId = _currentUserService.UserId;
+        var claims= _tokenService.GetClaims(accessToken);
+        
+        if(claims==null || !claims.Any())
         throw new NotImplementedException();
     }
 }

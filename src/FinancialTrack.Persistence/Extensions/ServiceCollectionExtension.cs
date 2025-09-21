@@ -30,7 +30,6 @@ public static class ServiceCollectionExtension
             var dbSettings = sp.GetRequiredService<IOptions<ConnectionStrings>>().Value;
             options.UseNpgsql(dbSettings.PostgresConn);
         });
-
         services.AddScoped(typeof(IGenericUnitofWork<>), typeof(GenericUnitofWork<>));
         services.AddScoped<IUserReadRepository, UserReadRepository>();
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
