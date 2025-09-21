@@ -5,5 +5,6 @@ namespace FinancialTrack.Application.Services;
 public interface IAuthService
 {
     Task<LoginUserResponse> LoginAsync(LoginUser model);
-    Task LogoutAsync();
+    Task<LogoutUserResponse> LogoutAsync();
+    Task<RefreshTokenResponse> RefreshTokenLoginAsync(string refreshToken,string expiredAccessToken);
 }

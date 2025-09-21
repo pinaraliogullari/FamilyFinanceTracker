@@ -15,13 +15,21 @@ public class TokenService : ITokenService
 
 {
     private readonly JwtSettings _jwtSettings;
+    private readonly CacheSettings _cacheSettings;
     private readonly ICacheService _cacheService;
 
-    public TokenService(IOptions<JwtSettings> jwtSettings, ICacheService cacheService)
+    public TokenService
+    (
+        IOptions<JwtSettings> jwtSettings,
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings
+    )
     {
         _jwtSettings = jwtSettings.Value;
         _cacheService = cacheService;
+        _cacheSettings = cacheSettings.Value;
     }
+
     public async Task<Token> CreateAccessTokenAsync(params Claim[] claims)
     {
         var claimList = claims.ToList();
@@ -33,8 +41,10 @@ public class TokenService : ITokenService
         SigningCredentials signingCredentials =
             new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-        token.AccessTokenExpiration = DateTime.UtcNow.Add(_jwtSettings.AccessTokenLifetime);
-        token.RefreshTokenExpiration = DateTime.UtcNow.Add(_jwtSettings.RefreshTokenLifetime);
+        token.AccessTokenExpiration =
+            DateTime.UtcNow.Add(TimeSpan.FromMinutes(_jwtSettings.AccessTokenLifetimeMinutes));
+        token.RefreshTokenExpiration = DateTime.UtcNow.Add(TimeSpan
+            .FromDays(_jwtSettings.RefreshTokenLifetimeDays));
 
         //access token ve refresh token üretiliyor.
         JwtSecurityToken tokenDescriptor = new JwtSecurityToken(
@@ -51,11 +61,11 @@ public class TokenService : ITokenService
         token.RefreshToken = CreateRefreshToken();
 
         //access token ve refresh token cacheleniyor.
-
+        //ikisinin de cachete kalma süreleri aynı.
         _cacheService.SetToCacheAsync(CacheKey.AccessTokenKey(userId), token.AccessToken,
-            _jwtSettings.AccessTokenLifetime);
+            TimeSpan.FromDays(_cacheSettings.TokenCacheLifetimeDays));
         _cacheService.SetToCacheAsync(CacheKey.RefreshTokenKey(userId), token.RefreshToken,
-            _jwtSettings.RefreshTokenLifetime);
+            TimeSpan.FromDays(_cacheSettings.TokenCacheLifetimeDays));
         return token;
     }
 
@@ -117,6 +127,7 @@ public class TokenService : ITokenService
             return false;
         }
     }
+
     public bool IsValidRefrehToken(string userId, string refreshToken)
     {
         var storedRefreshToken = _cacheService.GetFromCacheAsync(CacheKey.RefreshTokenKey(userId)).Result;
