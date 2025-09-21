@@ -44,10 +44,10 @@ public class GlobalExceptionHandler : IMiddleware
             _logger.LogWarning(ex, "InvalidOperation:{ErrorMessage}", ex.Message);
             await HandleException(context, HttpStatusCode.Conflict, ex.Message);
         }
-        catch (NotFoundUserException ex)
+        catch (AuthenticationFailedException ex)
         {
             _logger.LogWarning(ex, "NotFound:{ErrorMessage}", ex.Message);
-            await HandleException(context, HttpStatusCode.NotFound, ex.Message);
+            await HandleException(context, HttpStatusCode.Unauthorized, ex.Message);
         }
         catch (FluentValidation.ValidationException ex)
         {
