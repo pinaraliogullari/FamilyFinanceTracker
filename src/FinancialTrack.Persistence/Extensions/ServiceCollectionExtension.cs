@@ -41,6 +41,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
         services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

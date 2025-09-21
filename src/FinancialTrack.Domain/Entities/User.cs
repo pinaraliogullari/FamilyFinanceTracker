@@ -9,8 +9,8 @@ public class User : BaseEntity
     public string LastName { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
-    public Role Role { get; set; }
-    public long RoleId { get; set; }
+    public Role? Role { get; set; }
+    public long? RoleId { get; set; }
     public ICollection<FinancialRecord> FinancialRecords { get; set; } = new List<FinancialRecord>();
 
     //self-referencing many-to-many

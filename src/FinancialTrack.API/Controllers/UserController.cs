@@ -15,7 +15,7 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("create-user")]
     public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
     {

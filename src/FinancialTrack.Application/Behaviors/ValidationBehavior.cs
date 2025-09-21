@@ -29,7 +29,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
                 .ToList();
             if (failures.Any())
             {
-                throw new ValidationException(failures);
+                throw new FluentValidation.ValidationException(failures);
             }
               
         }

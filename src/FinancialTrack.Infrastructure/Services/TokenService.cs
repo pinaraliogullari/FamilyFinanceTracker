@@ -6,6 +6,7 @@ using FinancialTrack.Application.Constants;
 using FinancialTrack.Application.DTOs;
 using FinancialTrack.Application.Services;
 using FinancialTrack.Domain.Options;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FinancialTrack.Infrastructure.Services;
@@ -16,9 +17,9 @@ public class TokenService : ITokenService
     private readonly JwtSettings _jwtSettings;
     private readonly ICacheService _cacheService;
 
-    public TokenService(JwtSettings jwtSettings, ICacheService cacheService)
+    public TokenService(IOptions<JwtSettings> jwtSettings, ICacheService cacheService)
     {
-        _jwtSettings = jwtSettings;
+        _jwtSettings = jwtSettings.Value;
         _cacheService = cacheService;
     }
     public async Task<Token> CreateAccessTokenAsync(params Claim[] claims)
