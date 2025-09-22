@@ -1,6 +1,6 @@
 namespace FinancialTrack.Application.DTOs;
 
-public class LoginUserResponse
+public class LoginUserResponseDto
 {
     public Token? Token { get; set; }
 }

@@ -7,6 +7,7 @@ using FinancialTrack.Application.Services;
 using FinancialTrack.Application.UoW;
 using FinancialTrack.Domain.Entities;
 using FinancialTrack.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Persistence.Services;
 
@@ -31,7 +32,7 @@ public class UserService : IUserService
         _uow = uow;
     }
 
-    public async Task<CreateUserResponse> CreateUserAsync(CreateUser dto)
+    public async Task<CreateUserResponseDto> CreateUserAsync(CreateUserDto dto)
     {
         if (dto.Password != dto.ConfirmPassword)
             throw new InvalidOperationException("Password and ConfirmPassword does not match");
@@ -52,7 +53,7 @@ public class UserService : IUserService
         await _userWriteRepository.AddAsync(newUser);
         await _uow.SaveChangesAsync();
 
-        return new CreateUserResponse()
+        return new CreateUserResponseDto()
         {
             Id = newUser.Id,
             Firstname = newUser.FirstName,
@@ -61,7 +62,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task UpdateUserRoleAsync(UpdateUserRole dto )
+    public async Task UpdateUserRoleAsync(UpdateUserRoleDto dto)
     {
         var user = await _userReadRepository.GetByIdAsync(dto.UserId);
         if (user == null)
@@ -76,7 +77,7 @@ public class UserService : IUserService
         await _uow.SaveChangesAsync();
     }
 
-    public async Task UpdateUserPasswordAsync(UpdateUserPassword dto)
+    public async Task UpdateUserPasswordAsync(UpdateUserPasswordDto dto)
     {
         var user = await _userReadRepository.GetByIdAsync(dto.UserId);
         if (user == null)
@@ -91,5 +92,23 @@ public class UserService : IUserService
         user.Password = PasswordHasher.CreateHashPassword(dto.NewPassword);
         _userWriteRepository.Update(user);
         await _uow.SaveChangesAsync();
+    }
+
+    public async Task<List<UserDto>> GetAllUsersAsync()
+    {
+        var users = await _userReadRepository.GetAll(false)
+            .Include(x => x.Role).ToListAsync();
+        
+        if (users == null || !users.Any())
+            throw new NotFoundException("Any user not found");
+
+        return users.Select(x => new UserDto()
+        {
+            Id = x.Id,
+            Firstname = x.FirstName,
+            Lastname = x.LastName,
+            Email = x.Email,
+            RoleName = x.Role.Name,
+        }).ToList();
     }
 }

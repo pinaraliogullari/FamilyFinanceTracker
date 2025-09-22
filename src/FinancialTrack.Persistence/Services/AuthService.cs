@@ -36,7 +36,7 @@ public class AuthService : IAuthService
         _logger = logger;
     }
 
-    public async Task<LoginUserResponse> LoginAsync(LoginUser model)
+    public async Task<LoginUserResponseDto> LoginAsync(LoginUserDto model)
     {
         var user = _userReadRepository.GetWhere(x => x.Email == model.Email).FirstOrDefault();
         if (user == null || !PasswordHasher.Verify(model.Password, user.Password))
@@ -53,13 +53,13 @@ public class AuthService : IAuthService
             new Claim(ClaimKey.Role, role.Name) //burası null olduğu için token servise girmiyor olabilir
         };
         var token = await _tokenService.CreateAccessTokenAsync(claims);
-        return new LoginUserResponse()
+        return new LoginUserResponseDto()
         {
             Token = token,
         };
     }
 
-    public async Task<LogoutUserResponse> LogoutAsync()
+    public async Task<LogoutUserResponseDto> LogoutAsync()
     {
         var accessToken = _currentUserService.Token;
         var userId = _currentUserService.UserId;
@@ -70,7 +70,7 @@ public class AuthService : IAuthService
             /*Claims null ise kullanıcı authorize şekilde bu komuta gelmiş fakat sistem tarafından üretilmeyen bir access tokena sahip demektir.*/
             var ipAddress = _currentUserService.IPAddress;
             _logger.LogWarning($"UnAuthorize request with access token: {accessToken} on ip: {ipAddress}");
-            return new LogoutUserResponse()
+            return new LogoutUserResponseDto()
             {
                 Message = "UnAuthorize request with access token",
                 Success = false
@@ -78,14 +78,14 @@ public class AuthService : IAuthService
         }
 
         await _tokenService.RemoveOldTokens(userId);
-        return new LogoutUserResponse()
+        return new LogoutUserResponseDto()
         {
             Message = "User logged out successfully",
             Success = true
         };
     }
 
-    public async Task<RefreshTokenResponse> RefreshTokenLoginAsync(string refreshToken, string expiredAccessToken)
+    public async Task<RefreshTokenResponseDto> RefreshTokenLoginAsync(string refreshToken, string expiredAccessToken)
     {
         var claims = _tokenService.GetClaims(expiredAccessToken);
         if (claims == null || !claims.Any())
@@ -99,7 +99,7 @@ public class AuthService : IAuthService
 
         await _tokenService.RemoveOldTokens(userId);
         var newToken = await _tokenService.CreateAccessTokenAsync(claims.ToArray());
-        return new RefreshTokenResponse()
+        return new RefreshTokenResponseDto()
         {
             Token = newToken,
         };

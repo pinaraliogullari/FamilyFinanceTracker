@@ -16,7 +16,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest
     public async Task<ApiResult<CreateUserCommandResponse>> Handle(CreateUserCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var createUserModel = new DTOs.CreateUser()
+        var createUserModel = new DTOs.CreateUserDto()
         {
             Firstname = request.Firstname,
             Lastname = request.Lastname,

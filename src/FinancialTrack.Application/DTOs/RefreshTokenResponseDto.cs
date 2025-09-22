@@ -1,6 +1,6 @@
 namespace FinancialTrack.Application.DTOs;
 
-public class RefreshTokenResponse
+public class RefreshTokenResponseDto
 {
     public Token? Token { get; set; }
 }

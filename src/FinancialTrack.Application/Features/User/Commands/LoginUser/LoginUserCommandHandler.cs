@@ -17,7 +17,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, 
     public async Task<ApiResult<LoginUserCommandResponse>> Handle(LoginUserCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var loginUser = new DTOs.LoginUser()
+        var loginUser = new DTOs.LoginUserDto()
         {
             Email = request.Email,
             Password = request.Password

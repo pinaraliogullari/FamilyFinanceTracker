@@ -4,7 +4,8 @@ namespace FinancialTrack.Application.Services;
 
 public interface IUserService
 {
-    Task<CreateUserResponse> CreateUserAsync(CreateUser dto);
-    Task UpdateUserRoleAsync(UpdateUserRole dto);
-    Task UpdateUserPasswordAsync(UpdateUserPassword dto);
+    Task<CreateUserResponseDto> CreateUserAsync(CreateUserDto dto);
+    Task UpdateUserRoleAsync(UpdateUserRoleDto dto);
+    Task UpdateUserPasswordAsync(UpdateUserPasswordDto dto);
+    Task<List<UserDto>> GetAllUsersAsync();
 }

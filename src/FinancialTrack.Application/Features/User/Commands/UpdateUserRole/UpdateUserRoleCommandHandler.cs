@@ -20,7 +20,7 @@ public class
     public async Task<ApiResult<UpdateUserRoleCommandResponse>> Handle(UpdateUserRoleCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var updateUserRole = new DTOs.UpdateUserRole()
+        var updateUserRole = new DTOs.UpdateUserRoleDto()
         {
             UserId = request.UserId,
             RoleId = request.RoleId

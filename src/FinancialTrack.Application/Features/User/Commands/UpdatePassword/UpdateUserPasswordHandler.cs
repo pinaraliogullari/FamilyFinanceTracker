@@ -16,7 +16,7 @@ public class UpdateUserPasswordHandler:IRequestHandler<UpdateUserPasswordRequest
 
     public async Task<ApiResult<UpdateUserPasswordResponse>> Handle(UpdateUserPasswordRequest request, CancellationToken cancellationToken)
     {
-        var updateUserPasswordDto = new UpdateUserPassword()
+        var updateUserPasswordDto = new UpdateUserPasswordDto()
         {
             NewPassword = request.NewPassword,
             OldPassword = request.OldPassword,

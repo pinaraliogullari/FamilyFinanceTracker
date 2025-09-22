@@ -1,6 +1,6 @@
 namespace FinancialTrack.Application.DTOs;
 
-public class UpdateUserPassword
+public class UpdateUserPasswordDto
 {
     public long UserId  { get; set; }
     public string OldPassword { get; set; }

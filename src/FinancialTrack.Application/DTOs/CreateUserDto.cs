@@ -1,6 +1,6 @@
 namespace FinancialTrack.Application.DTOs;
 
-public class CreateUser
+public class CreateUserDto
 {
     public string Firstname { get; set; }
     public string Lastname { get; set; }

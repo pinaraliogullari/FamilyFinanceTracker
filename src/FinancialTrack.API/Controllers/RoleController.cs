@@ -24,10 +24,10 @@ public class RoleController : ControllerBase
         return Ok(response);
     }
     [HttpGet]
-    [Route("roles")]
-    public async Task<IActionResult> GetAllRoles(GetAllRolesQueryRequest request)
+    [Route("get-roles")]
+    public async Task<IActionResult> GetAllRoles()
     {
-        var response = await _mediator.Send(request);
+        var response = await _mediator.Send(new GetAllRolesQueryRequest());
         return Ok(response);
     }
 }
