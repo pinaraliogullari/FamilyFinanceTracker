@@ -16,12 +16,12 @@ public class TokenService : ITokenService
 {
     private readonly JwtSettings _jwtSettings;
     private readonly CacheSettings _cacheSettings;
-    private readonly ICacheService _cacheService;
+    private readonly ICacheService<string> _cacheService;
 
     public TokenService
     (
         IOptions<JwtSettings> jwtSettings,
-        ICacheService cacheService,
+        ICacheService<string> cacheService,
         IOptions<CacheSettings> cacheSettings
     )
     {
