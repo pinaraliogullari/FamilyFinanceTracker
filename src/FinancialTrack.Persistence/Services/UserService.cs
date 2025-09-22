@@ -31,21 +31,21 @@ public class UserService : IUserService
         _uow = uow;
     }
 
-    public async Task<CreateUserResponse> CreateUserAsync(CreateUser model)
+    public async Task<CreateUserResponse> CreateUserAsync(CreateUser dto)
     {
-        if (model.Password != model.ConfirmPassword)
+        if (dto.Password != dto.ConfirmPassword)
             throw new InvalidOperationException("Password and ConfirmPassword does not match");
 
-        var user = _userReadRepository.GetWhere(u => u.Email == model.Email).FirstOrDefault();
+        var user = _userReadRepository.GetWhere(u => u.Email == dto.Email).FirstOrDefault();
         if (user != null)
-            throw new InvalidOperationException($"User with email {model.Email} has already been created");
+            throw new InvalidOperationException($"User with email {dto.Email} has already been created");
 
-        var hashPassword = PasswordHasher.CreateHashPassword(model.Password);
+        var hashPassword = PasswordHasher.CreateHashPassword(dto.Password);
         var newUser = new User()
         {
-            FirstName = model.Firstname,
-            LastName = model.Lastname,
-            Email = model.Email,
+            FirstName = dto.Firstname,
+            LastName = dto.Lastname,
+            Email = dto.Email,
             Password = hashPassword,
             RoleId = 1,
         };
@@ -61,17 +61,34 @@ public class UserService : IUserService
         };
     }
 
-    public async Task UpdateUserRoleAsync(UpdateUserRole model)
+    public async Task UpdateUserRoleAsync(UpdateUserRole dto )
     {
-        var user = await _userReadRepository.GetByIdAsync(model.UserId);
+        var user = await _userReadRepository.GetByIdAsync(dto.UserId);
         if (user == null)
-            throw new NotFoundException($"User with id {model.UserId} not found");
+            throw new NotFoundException($"User with id {dto.UserId} not found");
 
-        var role = await _roleReadRepository.GetByIdAsync(model.RoleId);
+        var role = await _roleReadRepository.GetByIdAsync(dto.RoleId);
         if (role == null)
-            throw new NotFoundException($"Role with id {model.RoleId} not found");
+            throw new NotFoundException($"Role with id {dto.RoleId} not found");
 
-        user.RoleId = model.RoleId;
+        user.RoleId = dto.RoleId;
+        _userWriteRepository.Update(user);
+        await _uow.SaveChangesAsync();
+    }
+
+    public async Task UpdateUserPasswordAsync(UpdateUserPassword dto)
+    {
+        var user = await _userReadRepository.GetByIdAsync(dto.UserId);
+        if (user == null)
+            throw new NotFoundException($"User with id {dto.UserId} not found");
+
+        if (dto.NewPassword != dto.NewPasswordConfirm)
+            throw new InvalidOperationException("New password and confirm password do not match.");
+
+        if (!PasswordHasher.Verify(dto.OldPassword, user.Password))
+            throw new UnauthorizedAccessException("Old password is incorrect.");
+
+        user.Password = PasswordHasher.CreateHashPassword(dto.NewPassword);
         _userWriteRepository.Update(user);
         await _uow.SaveChangesAsync();
     }
