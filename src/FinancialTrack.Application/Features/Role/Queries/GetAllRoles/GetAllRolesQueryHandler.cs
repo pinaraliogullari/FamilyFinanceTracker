@@ -1,12 +1,22 @@
 using FinancialTrack.Application.Features.User.Queries.GetAllUsers;
+using FinancialTrack.Application.Services;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.Role.Queries.GetAllRoles;
 
-public class GetAllRolesQueryHandler: IRequestHandler<GetAllRolesQueryRequest, GetAllRolesQueryResponse>
+public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQueryRequest, GetAllRolesQueryResponse>
 {
-    public Task<GetAllRolesQueryResponse> Handle(GetAllRolesQueryRequest request, CancellationToken cancellationToken)
+    private readonly IRoleService _roleService;
+
+    public GetAllRolesQueryHandler(IRoleService roleService)
     {
-        throw new NotImplementedException();
+        _roleService = roleService;
+    }
+
+    public async Task<GetAllRolesQueryResponse> Handle(GetAllRolesQueryRequest request,
+        CancellationToken cancellationToken)
+    {
+        var roles = await _roleService.GetAllRolesAsync();
+        return new GetAllRolesQueryResponse { Roles = roles };
     }
 }
