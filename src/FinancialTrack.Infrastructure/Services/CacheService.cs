@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FinancialTrack.Application.Services;
 using FinancialTrack.Domain.Options;
 using Microsoft.Extensions.Caching.Distributed;
@@ -5,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace FinancialTrack.Infrastructure.Services;
 
-public class CacheService : ICacheService
+public class CacheService<TResponse> : ICacheService<TResponse>
 {
     private readonly IDistributedCache _distributedCache;
     private readonly CacheSettings _cacheSettings;
@@ -25,8 +26,13 @@ public class CacheService : ICacheService
         await _distributedCache.SetStringAsync(key, value, options);
     }
 
-    public async Task<string> GetFromCacheAsync(string key)
-        => await _distributedCache.GetStringAsync(key);
+    public async Task<TResponse?> GetFromCacheAsync(string key)
+    {
+        var cachedString = await _distributedCache.GetStringAsync(key);
+        if (cachedString == null) return default;
+
+        return JsonSerializer.Deserialize<TResponse>(cachedString);
+    }
 
 
     public async Task RemoveFromCacheAsync(string key)

@@ -1,4 +1,5 @@
 using FinancialTrack.Application.Features.User.Commands.CreateUser;
+using FinancialTrack.Application.Features.User.Commands.UpdatePassword;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,13 @@ public class UserController : ControllerBase
     [HttpPost]
     [Route("create-user")]
     public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
+    {
+        var response=await _mediator.Send(request);
+        return Ok(response);
+    }
+    [HttpPost]
+    [Route("update-password")]
+    public async Task<IActionResult> UpdatePassword(UpdateUserPasswordRequest request)
     {
         var response=await _mediator.Send(request);
         return Ok(response);

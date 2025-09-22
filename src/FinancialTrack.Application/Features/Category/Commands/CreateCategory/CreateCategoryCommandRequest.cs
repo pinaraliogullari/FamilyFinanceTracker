@@ -1,9 +1,9 @@
 using FinancialTrack.Application.Features.Role.Commands.CreateRole;
 using MediatR;
 
-namespace FinancialTrack.Application.Features.SubCategory.Commands.CreateSubCategory;
+namespace FinancialTrack.Application.Features.Category.Commands.CreateCategory;
 
-public class CreateSubCategoryCommandRequest:IRequest<CreateSubCategoryCommandResponse>
+public class CreateCategoryCommandRequest:IRequest<CreateCategoryCommandResponse>
 {
     public string FirstName { get; set; } 
     public string LastName { get; set; }

@@ -12,6 +12,7 @@ public static class ServiceCollectionExtension
         {
             config.RegisterServicesFromAssembly(typeof(ServiceCollectionExtension).Assembly);
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(CacheBehavior<,>));
         });
         services.AddValidatorsFromAssembly(typeof(ServiceCollectionExtension).Assembly);
         return services;

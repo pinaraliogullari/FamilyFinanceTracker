@@ -1,12 +1,12 @@
 using FinancialTrack.Application.Features.Role.Commands.CreateRole;
 using MediatR;
 
-namespace FinancialTrack.Application.Features.SubCategory.Commands.CreateSubCategory;
+namespace FinancialTrack.Application.Features.Category.Commands.CreateCategory;
 
 public class
-    CreateSubCategoryCommandHandler : IRequestHandler<CreateSubCategoryCommandRequest, CreateSubCategoryCommandResponse>
+    CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommandRequest, CreateCategoryCommandResponse>
 {
-    public Task<CreateSubCategoryCommandResponse> Handle(CreateSubCategoryCommandRequest request,
+    public Task<CreateCategoryCommandResponse> Handle(CreateCategoryCommandRequest request,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

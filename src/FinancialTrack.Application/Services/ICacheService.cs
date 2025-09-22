@@ -1,8 +1,8 @@
 namespace FinancialTrack.Application.Services;
 
-public interface ICacheService
+public interface ICacheService<TResponse>
 {
     Task SetToCacheAsync(string key,string value,TimeSpan absoluteExpiration);
-    Task<string> GetFromCacheAsync(string key);
+    Task<TResponse?> GetFromCacheAsync(string key);
     Task RemoveFromCacheAsync(string key);
 }
