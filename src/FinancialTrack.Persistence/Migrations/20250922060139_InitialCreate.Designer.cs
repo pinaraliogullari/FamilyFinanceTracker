@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinancialTrack.Persistence.Migrations
 {
     [DbContext(typeof(FinancialTrackDbContext))]
-    [Migration("20250919071657_fixed-foreignkey")]
-    partial class fixedforeignkey
+    [Migration("20250922060139_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace FinancialTrack.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("CreatedById")
+                    b.Property<long?>("CreatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
@@ -50,7 +50,7 @@ namespace FinancialTrack.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<long>("UpdatedById")
+                    b.Property<long?>("UpdatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -75,7 +75,7 @@ namespace FinancialTrack.Persistence.Migrations
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CreatedById")
+                    b.Property<long?>("CreatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
@@ -86,7 +86,7 @@ namespace FinancialTrack.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<long>("UpdatedById")
+                    b.Property<long?>("UpdatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -112,7 +112,7 @@ namespace FinancialTrack.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("CreatedById")
+                    b.Property<long?>("CreatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
@@ -123,7 +123,7 @@ namespace FinancialTrack.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<long>("UpdatedById")
+                    b.Property<long?>("UpdatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -132,6 +132,36 @@ namespace FinancialTrack.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Default User",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Anne",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Baba",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Çocuk",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("FinancialTrack.Domain.Entities.User", b =>
@@ -142,7 +172,7 @@ namespace FinancialTrack.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("CreatedById")
+                    b.Property<long?>("CreatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
@@ -168,10 +198,10 @@ namespace FinancialTrack.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<long>("RoleId")
+                    b.Property<long?>("RoleId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UpdatedById")
+                    b.Property<long?>("UpdatedById")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -222,9 +252,7 @@ namespace FinancialTrack.Persistence.Migrations
                 {
                     b.HasOne("FinancialTrack.Domain.Entities.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });

@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace FinancialTrack.Persistence.Migrations
 {
     /// <inheritdoc />
@@ -23,8 +25,8 @@ namespace FinancialTrack.Persistence.Migrations
                     FinancialRecordType = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedById = table.Column<long>(type: "bigint", nullable: false)
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedById = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,8 +42,8 @@ namespace FinancialTrack.Persistence.Migrations
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedById = table.Column<long>(type: "bigint", nullable: false)
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedById = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,12 +60,11 @@ namespace FinancialTrack.Persistence.Migrations
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    RoleId = table.Column<long>(type: "bigint", nullable: false),
-                    RoleId1 = table.Column<long>(type: "bigint", nullable: true),
+                    RoleId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedById = table.Column<long>(type: "bigint", nullable: false)
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedById = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -71,12 +72,6 @@ namespace FinancialTrack.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId1",
-                        column: x => x.RoleId1,
                         principalTable: "Roles",
                         principalColumn: "Id");
                 });
@@ -93,8 +88,8 @@ namespace FinancialTrack.Persistence.Migrations
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedById = table.Column<long>(type: "bigint", nullable: false)
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedById = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -113,6 +108,41 @@ namespace FinancialTrack.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserFollow",
+                columns: table => new
+                {
+                    FollowerId = table.Column<long>(type: "bigint", nullable: false),
+                    FollowingId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFollow", x => new { x.FollowerId, x.FollowingId });
+                    table.ForeignKey(
+                        name: "FK_UserFollow_Users_FollowerId",
+                        column: x => x.FollowerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserFollow_Users_FollowingId",
+                        column: x => x.FollowingId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "CreatedById", "CreatedDate", "Name", "UpdatedById", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 1L, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Default User", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2L, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Anne", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3L, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Baba", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4L, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Çocuk", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_FinancialRecords_CategoryId",
                 table: "FinancialRecords",
@@ -124,14 +154,14 @@ namespace FinancialTrack.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserFollow_FollowingId",
+                table: "UserFollow",
+                column: "FollowingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId1",
-                table: "Users",
-                column: "RoleId1");
         }
 
         /// <inheritdoc />
@@ -139,6 +169,9 @@ namespace FinancialTrack.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "FinancialRecords");
+
+            migrationBuilder.DropTable(
+                name: "UserFollow");
 
             migrationBuilder.DropTable(
                 name: "Categories");
