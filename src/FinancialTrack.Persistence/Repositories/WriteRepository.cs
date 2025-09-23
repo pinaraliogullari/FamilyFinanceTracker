@@ -25,7 +25,10 @@ public class WriteRepository<T> : IWriteRepository<T> where T : BaseEntity
 
 
     public void Remove(T entity)
-        => Table.Remove(entity);
+    {
+        entity.IsDeleted = true;
+        Table.Update(entity);
+    }
 
   
 }
