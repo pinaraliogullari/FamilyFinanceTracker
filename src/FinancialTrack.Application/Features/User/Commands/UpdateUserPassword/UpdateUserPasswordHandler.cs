@@ -3,7 +3,7 @@ using FinancialTrack.Application.Services;
 using FinancialTrack.Application.Wrappers;
 using MediatR;
 
-namespace FinancialTrack.Application.Features.User.Commands.UpdatePassword;
+namespace FinancialTrack.Application.Features.User.Commands.UpdateUserPassword;
 
 public class UpdateUserPasswordHandler:IRequestHandler<UpdateUserPasswordRequest, ApiResult<UpdateUserPasswordResponse>>
 {
@@ -18,6 +18,7 @@ public class UpdateUserPasswordHandler:IRequestHandler<UpdateUserPasswordRequest
     {
         var updateUserPasswordDto = new UpdateUserPasswordDto()
         {
+            UserId = request.UserId,
             NewPassword = request.NewPassword,
             OldPassword = request.OldPassword,
             NewPasswordConfirm = request.NewPasswordConfirm,

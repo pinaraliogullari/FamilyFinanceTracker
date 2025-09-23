@@ -44,8 +44,8 @@ public class UserService : IUserService
         var hashPassword = PasswordHasher.CreateHashPassword(dto.Password);
         var newUser = new User()
         {
-            FirstName = dto.Firstname,
-            LastName = dto.Lastname,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
             Email = dto.Email,
             Password = hashPassword,
             RoleId = 1,

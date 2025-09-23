@@ -12,10 +12,10 @@ public static class PasswordHasher
         var hash = sha256.ComputeHash(bytes);
         return Convert.ToBase64String(hash);
     }
-    public static bool Verify(string password, string hashedPassword)
+    public static bool Verify(string newPassword, string oldHashedPassword)
     {
-        var hashOfInput = CreateHashPassword(password);
-        return hashOfInput == hashedPassword;
+        var hashOfInput = CreateHashPassword(newPassword);
+        return hashOfInput == oldHashedPassword;
     }
     
 }

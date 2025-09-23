@@ -5,5 +5,4 @@ namespace FinancialTrack.Application.Features.User.Commands.DeleteUser;
 public class DeleteUserCommandResponse
 {
    public long UserId { get; set; }
-   public bool Success { get; set; }
 }

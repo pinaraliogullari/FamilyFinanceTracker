@@ -18,8 +18,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest
     {
         var createUserModel = new DTOs.CreateUserDto()
         {
-            Firstname = request.Firstname,
-            Lastname = request.Lastname,
+            FirstName = request.Firstname,
+            LastName = request.Lastname,
             Email = request.Email,
             Password = request.Password,
             ConfirmPassword = request.ConfirmPassword,

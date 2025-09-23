@@ -1,9 +1,10 @@
 using FinancialTrack.Application.Services;
+using FinancialTrack.Application.Wrappers;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Commands.DeleteUser;
 
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommandRequest, DeleteUserCommandResponse>
+public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommandRequest, ApiResult<DeleteUserCommandResponse>>
 {
     private readonly IUserService _userService;
 
@@ -12,14 +13,15 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommandRequest
         _userService = userService;
     }
 
-    public async Task<DeleteUserCommandResponse> Handle(DeleteUserCommandRequest request,
+    public async Task<ApiResult<DeleteUserCommandResponse>> Handle(DeleteUserCommandRequest request,
         CancellationToken cancellationToken)
     {
         await _userService.DeleteUserAsync(request.UserId);
-        return new DeleteUserCommandResponse()
+        var deleteUserCommandResponse = new DeleteUserCommandResponse()
         {
-            Success = true,
+         
             UserId = request.UserId
         };
+        return ApiResult<DeleteUserCommandResponse>.SuccessResult(deleteUserCommandResponse);;
     }
 }

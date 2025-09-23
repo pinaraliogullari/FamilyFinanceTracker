@@ -1,6 +1,6 @@
 using FinancialTrack.Application.Features.User.Commands.CreateUser;
 using FinancialTrack.Application.Features.User.Commands.DeleteUser;
-using FinancialTrack.Application.Features.User.Commands.UpdatePassword;
+using FinancialTrack.Application.Features.User.Commands.UpdateUserPassword;
 using FinancialTrack.Application.Features.User.Queries.GetAllUsers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
