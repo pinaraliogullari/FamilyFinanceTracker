@@ -8,4 +8,5 @@ public interface IUserService
     Task UpdateUserRoleAsync(UpdateUserRoleDto dto);
     Task UpdateUserPasswordAsync(UpdateUserPasswordDto dto);
     Task<List<UserDto>> GetAllUsersAsync();
+    Task DeleteUserAsync(long userId);
 }

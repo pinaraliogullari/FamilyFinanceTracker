@@ -98,7 +98,7 @@ public class UserService : IUserService
     {
         var users = await _userReadRepository.GetAll(false)
             .Include(x => x.Role).ToListAsync();
-        
+
         if (users == null || !users.Any())
             throw new NotFoundException("Any user not found");
 
@@ -110,5 +110,14 @@ public class UserService : IUserService
             Email = x.Email,
             RoleName = x.Role.Name,
         }).ToList();
+    }
+
+    public async Task DeleteUserAsync(long userId)
+    {
+        var user = await _userReadRepository.GetByIdAsync(userId);
+        if (user == null)
+            throw new NotFoundException($"User with id {userId} not found");
+        _userWriteRepository.Remove(user);
+        await _uow.SaveChangesAsync();
     }
 }

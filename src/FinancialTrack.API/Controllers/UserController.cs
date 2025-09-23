@@ -1,4 +1,5 @@
 using FinancialTrack.Application.Features.User.Commands.CreateUser;
+using FinancialTrack.Application.Features.User.Commands.DeleteUser;
 using FinancialTrack.Application.Features.User.Commands.UpdatePassword;
 using FinancialTrack.Application.Features.User.Queries.GetAllUsers;
 using MediatR;
@@ -36,6 +37,13 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetAllUsers()
     {
         var response=await _mediator.Send(new  GetAllUsersQueryRequest());
+        return Ok(response);
+    }
+    [HttpDelete]
+    [Route("delete-user/{userId}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] long userId)
+    {
+        var response=await _mediator.Send(new DeleteUserCommandRequest{UserId=userId});
         return Ok(response);
     }
 }
