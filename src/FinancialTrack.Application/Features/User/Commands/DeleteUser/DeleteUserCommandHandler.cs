@@ -22,6 +22,6 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommandRequest
          
             UserId = request.UserId
         };
-        return ApiResult<DeleteUserCommandResponse>.SuccessResult(deleteUserCommandResponse);;
+        return ApiResult<DeleteUserCommandResponse>.SuccessResult(deleteUserCommandResponse);
     }
 }
