@@ -29,6 +29,4 @@ public class WriteRepository<T> : IWriteRepository<T> where T : BaseEntity
         entity.IsDeleted = true;
         Table.Update(entity);
     }
-
-  
 }

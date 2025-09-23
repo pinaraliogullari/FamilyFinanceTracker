@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using FinancialTrack.Application.Services;
 using FinancialTrack.Domain.Entities;
@@ -25,17 +26,22 @@ public class FinancialTrackDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         //created by ilk kayıt işleminde set edilsin daha sonraki update işlemlerinde değişmesin.
-         foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-                      .Where(t => typeof(BaseEntity).IsAssignableFrom(t.ClrType)))
-         {
-             modelBuilder.Entity(entityType.ClrType)
-                 .Property<long?>("CreatedById")
-                 .Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);
-         }
-        
-        // modelBuilder.Entity<User>()
-        //     .Property(x => x.CreatedById)
-        //     .Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes()
+                     .Where(t => typeof(BaseEntity).IsAssignableFrom(t.ClrType)))
+        {
+            modelBuilder.Entity(entityType.ClrType)
+                .Property<long?>("CreatedById")
+                .Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);
+
+            //Global query filter=>IsDeleted=false
+            //Tüm querylere IsDeleted==false şeklinde filter eklenecek.
+
+            var param = Expression.Parameter(entityType.ClrType, "entity");
+            var prop = Expression.PropertyOrField(param, nameof(BaseEntity.IsDeleted));
+            var entityNotDeleted = Expression.Lambda(Expression.Equal(prop, Expression.Constant(false)), param);
+            modelBuilder.Entity(entityType.ClrType).HasQueryFilter(entityNotDeleted);
+        }
+
         base.OnModelCreating(modelBuilder);
     }
 
@@ -57,6 +63,7 @@ public class FinancialTrackDbContext : DbContext
                 item.Entity.UpdatedById = userId;
             }
         }
+
         return base.SaveChangesAsync(cancellationToken);
     }
 }
