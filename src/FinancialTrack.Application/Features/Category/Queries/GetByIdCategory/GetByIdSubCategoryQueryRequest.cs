@@ -1,8 +1,9 @@
+using FinancialTrack.Application.Markers;
 using MediatR;
 
-namespace FinancialTrack.Application.Features.SubCategory.Queries.GetByIdSubCategory;
+namespace FinancialTrack.Application.Features.Category.Queries.GetByIdCategory;
 
-public class GetByIdSubCategoryQueryRequest:IRequest<GetByIdSubCategoryQueryResponse>
+public class GetByIdCategoryQueryRequest:IBaseQueryRequest<GetByIdCategoryQueryResponse>
 {
     
 }

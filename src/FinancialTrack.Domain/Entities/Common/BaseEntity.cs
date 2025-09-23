@@ -7,4 +7,5 @@ public abstract class BaseEntity
     public DateTime UpdatedDate { get; set; }
     public long? CreatedById { get; set; }
     public long? UpdatedById { get; set; }
+    public bool IsDeleted  { get; set; }
 }
