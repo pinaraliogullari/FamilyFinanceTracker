@@ -1,3 +1,4 @@
+using System.Net;
 using FinancialTrack.Application.Features.User.Commands.CreateUser;
 using FinancialTrack.Application.Features.User.Commands.DeleteUser;
 using FinancialTrack.Application.Features.User.Commands.UpdateUserPassword;
@@ -7,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class UserController : BaseController
 {
     private readonly IMediator _mediator;
@@ -23,27 +22,27 @@ public class UserController : BaseController
     public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
     {
         var response=await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
     }
     [HttpPost]
     [Route("update-password")]
     public async Task<IActionResult> UpdatePassword(UpdateUserPasswordRequest request)
     {
         var response=await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response);
     }
     [HttpGet]
     [Route("get-users")]
     public async Task<IActionResult> GetAllUsers()
     {
         var response=await _mediator.Send(new  GetAllUsersQueryRequest());
-        return Ok(response);
+        return HandleApiResponse(response);
     }
     [HttpDelete]
     [Route("delete-user/{userId}")]
     public async Task<IActionResult> DeleteUser([FromRoute] long userId)
     {
         var response=await _mediator.Send(new DeleteUserCommandRequest{UserId=userId});
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 }

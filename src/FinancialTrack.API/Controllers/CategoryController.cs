@@ -1,3 +1,4 @@
+using System.Net;
 using FinancialTrack.Application.Features.Category.Commands.CreateCategory;
 using FinancialTrack.Application.Features.Category.Commands.DeleteCategory;
 using FinancialTrack.Application.Features.Category.Queries.GetAllCategories;
@@ -8,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class CategoryController : BaseController
 {
     private readonly IMediator _mediator;
@@ -24,7 +23,7 @@ public class CategoryController : BaseController
     public async Task<IActionResult> CreateCategory(CreateCategoryCommandRequest request)
     {
         var response = await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
     }
 
     [HttpGet]
@@ -32,7 +31,7 @@ public class CategoryController : BaseController
     public async Task<IActionResult> GetCategories()
     {
         var response = await _mediator.Send(new GetAllCategoriesQueryRequest());
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 
     [HttpGet]
@@ -40,7 +39,7 @@ public class CategoryController : BaseController
     public async Task<IActionResult> GetCategoriesByRecordType(FinancialRecordType recordType)
     {
         var response = await _mediator.Send(new GetCategoriesByTypeQueryRequest { RecordType = recordType });
-        return Ok(response);
+        return HandleApiResponse(response);
     }
     
     [HttpDelete]
@@ -48,6 +47,6 @@ public class CategoryController : BaseController
     public async Task<IActionResult> DeleteCategory(long categoryId)
     {
         var response = await _mediator.Send(new DeleteCategoryCommandRequest{ CategoryId = categoryId });
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 }

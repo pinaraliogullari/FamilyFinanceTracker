@@ -1,3 +1,4 @@
+using System.Net;
 using FinancialTrack.Application.Features.FinancialRecord.Commands.CreateFinancialRecord;
 using FinancialTrack.Application.Features.FinancialRecord.Commands.DeleteFinancialRecord;
 using FinancialTrack.Application.Features.FinancialRecord.Commands.UpdateFinancialRecord;
@@ -7,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class FinancialRecordController : BaseController
 {
     private readonly IMediator _mediator;
@@ -23,7 +22,7 @@ public class FinancialRecordController : BaseController
     public async Task<IActionResult> CreateFinancialRecord(CreateFinancialRecordCommandRequest request)
     {
         var response = await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
     }
 
     [HttpPost]
@@ -31,7 +30,7 @@ public class FinancialRecordController : BaseController
     public async Task<IActionResult> UpdateFinancialRecord(UpdateFinancialRecordCommandRequest request)
     {
         var response = await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 
     [HttpPost]
@@ -40,7 +39,7 @@ public class FinancialRecordController : BaseController
     {
         var response = await _mediator.Send(new DeleteFinancialRecordCommandRequest
             { FinancialRecordId = financialRecordId });
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 
     [HttpGet]
@@ -48,7 +47,7 @@ public class FinancialRecordController : BaseController
     public async Task<IActionResult> GetAllFinancialRecords()
     {
         var response = await _mediator.Send(new GetAllFinancialRecordsQueryRequest());
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 
     // belli bir userın kaydını getir.
@@ -57,5 +56,6 @@ public class FinancialRecordController : BaseController
     public async Task<IActionResult> GetUsersFinancialRecords(long userId)
     {
         return Ok();
+        //return HandleApiResponse(response);
     }
 }

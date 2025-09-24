@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class AuthController : BaseController
 {
     private readonly IMediator _mediator;
@@ -22,20 +20,20 @@ public class AuthController : BaseController
     public async Task<IActionResult> Login(LoginUserCommandRequest request)
     {
         var response=await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response);
     }
     [HttpPost]
     [Route("logout")]
     public async Task<IActionResult> Login(LogoutUserCommandRequest request)
     {
         var response=await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response);
     }
     [HttpPost]
     [Route("refresh-token")]
     public async Task<IActionResult> LoginByRefreshToken(RefreshTokenCommandRequest request)
     {
         var response=await _mediator.Send(request);
-        return Ok(response);
+        return HandleApiResponse(response);
     }
 }

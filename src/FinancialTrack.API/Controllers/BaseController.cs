@@ -1,13 +1,23 @@
+using System.Net;
+using FinancialTrack.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
 
 [ApiController]
-public class BaseController : ControllerBase
+[Route("api/[controller]")]
+public abstract class BaseController : ControllerBase
 {
-    // GET
-    public IActionResult Index()
+    protected IActionResult HandleApiResponse<T>(T? result, string successMessage = "Operation successful",
+        HttpStatusCode httpStatusCode = HttpStatusCode.OK)
     {
-        return Ok();
+        //data-success
+        if (result is not null)
+        {
+            return StatusCode((int)httpStatusCode, ApiResult<T>.SuccessResult(result, successMessage, httpStatusCode));
+        }
+
+        //no data-success
+        return StatusCode((int)httpStatusCode, ApiResult<T>.SuccessResult(successMessage, httpStatusCode));
     }
 }
