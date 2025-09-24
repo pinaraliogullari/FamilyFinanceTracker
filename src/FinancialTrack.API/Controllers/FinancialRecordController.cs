@@ -9,7 +9,7 @@ namespace FinancialTrack.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FinancialRecordController : Controller
+public class FinancialRecordController : BaseController
 {
     private readonly IMediator _mediator;
 
