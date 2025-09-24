@@ -9,7 +9,7 @@ public class SampleQueryForCacheBehavior:IRequest<object>, ICacheableQuery
     //public string QueryCacheKey => CacheKey.AccessTokenKey(UserId); 
     public string UserId { get; set; }
    
-    //parametre eklenebilir.
-    public object[] CacheKeyParams =>new object[]{UserId};
+    //opsiyonel, parametre eklenebilir.
+    public string[] CacheKeyParams =>Array.Empty<string>();
     public TimeSpan? CacheDuration => TimeSpan.FromMinutes(5);
 }

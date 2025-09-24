@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Commands.UpdateUserRole;
 
-public class UpdateUserRoleCommandRequest : IRequest<ApiResult<UpdateUserRoleCommandResponse>>
+public class UpdateUserRoleCommandRequest : IRequest<UpdateUserRoleCommandResponse>
 {
     public long UserId { get; set; }
     public long RoleId { get; set; }

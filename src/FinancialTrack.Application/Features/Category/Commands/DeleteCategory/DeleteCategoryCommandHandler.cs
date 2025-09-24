@@ -1,28 +1,43 @@
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Exceptions;
+using FinancialTrack.Infrastructure.UoW;
+using FinancialTrack.Persistence.AbstractRepositories.CategoryRepository;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.Category.Commands.DeleteCategory;
 
 public class
     DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommandRequest,
-    ApiResult<DeleteCategoryCommandResponse>>
+    DeleteCategoryCommandResponse>
 {
-    private readonly ICategoryService _categoryService;
+    private readonly ICategoryReadRepository _categoryReadRepository;
+    private readonly ICategoryWriteRepository _categoryWriteRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public DeleteCategoryCommandHandler(ICategoryService categoryService)
+    public DeleteCategoryCommandHandler
+    (
+        ICategoryReadRepository categoryReadRepository,
+        ICategoryWriteRepository categoryWriteRepository,
+        IGenericUnitofWork<FinancialTrackDbContext> uow
+    )
     {
-        _categoryService = categoryService;
+        _categoryReadRepository = categoryReadRepository;
+        _categoryWriteRepository = categoryWriteRepository;
+        _uow = uow;
     }
 
-    public async Task<ApiResult<DeleteCategoryCommandResponse>> Handle(DeleteCategoryCommandRequest request,
+
+    public async Task<DeleteCategoryCommandResponse> Handle(DeleteCategoryCommandRequest request,
         CancellationToken cancellationToken)
     {
-        await _categoryService.DeleteCategoryAsync(request.CategoryId);
-        var deleteCategoryCommandResponse = new DeleteCategoryCommandResponse()
+        var category = await _categoryReadRepository.GetByIdAsync(request.CategoryId);
+        if (category == null)
+            throw new NotFoundException($"Category with id {request.CategoryId} not found");
+        _categoryWriteRepository.Remove(category);
+        await _uow.SaveChangesAsync();
+        return new DeleteCategoryCommandResponse()
         {
             CategoryId = request.CategoryId
         };
-        return ApiResult<DeleteCategoryCommandResponse>.SuccessResult(deleteCategoryCommandResponse);
     }
 }

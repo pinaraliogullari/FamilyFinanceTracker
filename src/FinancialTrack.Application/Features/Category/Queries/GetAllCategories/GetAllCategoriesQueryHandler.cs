@@ -1,34 +1,32 @@
-using FinancialTrack.Application.DTOs;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Exceptions;
+using FinancialTrack.Persistence.AbstractRepositories.CategoryRepository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Application.Features.Category.Queries.GetAllCategories;
 
 public class
-    GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQueryRequest,ApiResult<GetAllCategoriesQueryResponse>>
+    GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQueryRequest,List<GetAllCategoriesQueryResponse>>
 {
-    private readonly ICategoryService _categoryService;
+    private readonly ICategoryReadRepository _categoryReadRepository;
 
-    public GetAllCategoriesQueryHandler(ICategoryService categoryService)
+    public GetAllCategoriesQueryHandler(ICategoryReadRepository categoryReadRepository)
     {
-        _categoryService = categoryService;
+        _categoryReadRepository = categoryReadRepository;
     }
 
-    public async Task<ApiResult<GetAllCategoriesQueryResponse>> Handle(GetAllCategoriesQueryRequest request,
+    public async Task<List<GetAllCategoriesQueryResponse>> Handle(GetAllCategoriesQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var categories=await _categoryService.GetAllCategoriesAsync();
-        var response = new GetAllCategoriesQueryResponse()
+        var categories = await _categoryReadRepository.GetAll(false).ToListAsync();
+        if (categories == null || !categories.Any())
+            throw new NotFoundException("Any category not found");
+        return categories.Select(x => new GetAllCategoriesQueryResponse()
         {
-            Categories = categories.Select(x => new CategoryDto()
-            {
-                Id = x.Id,
-                IsCustom = x.IsCustom,
-                Name = x.Name,
-                FinancialRecordType = x.FinancialRecordType
-            }).ToList()
-        };
-        return ApiResult<GetAllCategoriesQueryResponse>.SuccessResult(response); 
+            Id = x.Id,
+            IsCustom = x.IsCustom,
+            Name = x.Name,
+            FinancialRecordType = x.FinancialRecordType
+        }).ToList();
     }
 }

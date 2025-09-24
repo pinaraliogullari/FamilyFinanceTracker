@@ -949,7 +949,9 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "FinancialTrack.Domain": "1.0.0",
+          "FinancialTrack.Core": "1.0.0",
+          "FinancialTrack.Infrastructure": "1.0.0",
+          "FinancialTrack.Persistence": "1.0.0",
           "FluentValidation": "11.11.0",
           "FluentValidation.DependencyInjectionExtensions": "11.11.0",
           "MediatR": "12.5.0",
@@ -962,6 +964,20 @@
         },
         "runtime": {
           "bin/placeholder/FinancialTrack.Application.dll": {}
+        }
+      },
+      "FinancialTrack.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "FinancialTrack.Domain": "1.0.0",
+          "MediatR.Contracts": "2.0.1"
+        },
+        "compile": {
+          "bin/placeholder/FinancialTrack.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FinancialTrack.Core.dll": {}
         }
       },
       "FinancialTrack.Domain/1.0.0": {
@@ -978,8 +994,11 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "FinancialTrack.Application": "1.0.0",
+          "FinancialTrack.Core": "1.0.0",
+          "FluentValidation": "11.11.0",
+          "MediatR": "12.5.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.9",
+          "Microsoft.EntityFrameworkCore": "9.0.9",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "9.0.9",
           "System.IdentityModel.Tokens.Jwt": "8.14.0"
         },
@@ -994,7 +1013,9 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "FinancialTrack.Application": "1.0.0",
+          "FinancialTrack.Core": "1.0.0",
+          "FinancialTrack.Domain": "1.0.0",
+          "FinancialTrack.Infrastructure": "1.0.0",
           "Microsoft.EntityFrameworkCore": "9.0.9",
           "Microsoft.EntityFrameworkCore.Relational": "9.0.9",
           "Microsoft.Extensions.Configuration": "9.0.9",
@@ -2349,6 +2370,11 @@
       "path": "../FinancialTrack.Application/FinancialTrack.Application.csproj",
       "msbuildProject": "../FinancialTrack.Application/FinancialTrack.Application.csproj"
     },
+    "FinancialTrack.Core/1.0.0": {
+      "type": "project",
+      "path": "../FinancialTrack.Core/FinancialTrack.Core.csproj",
+      "msbuildProject": "../FinancialTrack.Core/FinancialTrack.Core.csproj"
+    },
     "FinancialTrack.Domain/1.0.0": {
       "type": "project",
       "path": "../FinancialTrack.Domain/FinancialTrack.Domain.csproj",
@@ -2368,8 +2394,6 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "FinancialTrack.Application >= 1.0.0",
-      "FinancialTrack.Infrastructure >= 1.0.0",
-      "FinancialTrack.Persistence >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.9",
       "Serilog.AspNetCore >= 9.0.0",
       "Serilog.Sinks.Console >= 6.0.0",
@@ -2411,12 +2435,6 @@
           "projectReferences": {
             "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Application\\FinancialTrack.Application.csproj": {
               "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Application\\FinancialTrack.Application.csproj"
-            },
-            "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Infrastructure\\FinancialTrack.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Infrastructure\\FinancialTrack.Infrastructure.csproj"
-            },
-            "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Persistence\\FinancialTrack.Persistence.csproj": {
-              "projectPath": "C:\\Users\\PinarAliogullariKaya\\Projects\\FamilyFinanceTracker\\src\\FinancialTrack.Persistence\\FinancialTrack.Persistence.csproj"
             }
           }
         }

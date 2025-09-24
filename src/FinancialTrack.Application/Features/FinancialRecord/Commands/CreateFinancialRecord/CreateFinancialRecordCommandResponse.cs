@@ -2,5 +2,5 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Commands.CreateFin
 
 public class CreateFinancialRecordCommandResponse
 {
-    
+    public long FinancialRecordId { get; set; }
 }

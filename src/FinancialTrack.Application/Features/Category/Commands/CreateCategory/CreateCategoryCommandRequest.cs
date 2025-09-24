@@ -5,7 +5,7 @@ using MediatR;
 
 namespace FinancialTrack.Application.Features.Category.Commands.CreateCategory;
 
-public class CreateCategoryCommandRequest:IRequest<ApiResult<CreateCategoryCommandResponse>>
+public class CreateCategoryCommandRequest:IRequest<CreateCategoryCommandResponse>
 {
     public string Name { get; set; }
     public FinancialRecordType FinancialRecordType { get; set; } 

@@ -1,33 +1,35 @@
-using FinancialTrack.Application.DTOs;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Exceptions;
+using FinancialTrack.Persistence.AbstractRepositories.UserRepository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Application.Features.User.Queries.GetAllUsers;
 
-public class GetAllUsersQueryHandler: IRequestHandler<GetAllUsersQueryRequest, ApiResult<GetAllUsersQueryResponse>>
+public class GetAllUsersQueryHandler: IRequestHandler<GetAllUsersQueryRequest, List<GetAllUsersQueryResponse>>
 {
-    private readonly IUserService _userService;
+    private readonly IUserReadRepository _userReadRepository;
 
-    public GetAllUsersQueryHandler(IUserService userService)
+
+    public GetAllUsersQueryHandler(IUserReadRepository userReadRepository)
     {
-        _userService = userService;
+        _userReadRepository = userReadRepository;
     }
 
-    public async Task<ApiResult<GetAllUsersQueryResponse>> Handle(GetAllUsersQueryRequest request, CancellationToken cancellationToken)
+    public async Task<List<GetAllUsersQueryResponse>> Handle(GetAllUsersQueryRequest request, CancellationToken cancellationToken)
     {
-        var users= await _userService.GetAllUsersAsync();
-        var response = new GetAllUsersQueryResponse()
+        var users = await _userReadRepository.GetAll(false)
+            .Include(x => x.Role).ToListAsync();
+
+        if (users == null || !users.Any())
+            throw new NotFoundException("Any user not found");
+
+        return users.Select(x => new GetAllUsersQueryResponse()
         {
-            Users = users.Select(x => new UserDto()
-            {
-                Email = x.Email,
-                Firstname = x.Firstname,
-                Lastname = x.Lastname,
-                Id = x.Id,
-                RoleName = x.RoleName
-            }).ToList()
-        };
-        return  ApiResult<GetAllUsersQueryResponse>.SuccessResult(response); 
+            Id = x.Id,
+            Firstname = x.FirstName,
+            Lastname = x.LastName,
+            Email = x.Email,
+            RoleName = x.Role.Name,
+        }).ToList();
     }
 }

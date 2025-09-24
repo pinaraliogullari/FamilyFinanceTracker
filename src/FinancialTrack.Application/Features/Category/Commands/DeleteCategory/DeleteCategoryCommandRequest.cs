@@ -3,7 +3,7 @@ using MediatR;
 
 namespace FinancialTrack.Application.Features.Category.Commands.DeleteCategory;
 
-public class DeleteCategoryCommandRequest:IRequest<ApiResult<DeleteCategoryCommandResponse>>
+public class DeleteCategoryCommandRequest:IRequest<DeleteCategoryCommandResponse>
 {
     public long CategoryId { get; set; }
 }

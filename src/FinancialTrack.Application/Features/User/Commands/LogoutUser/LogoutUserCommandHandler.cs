@@ -1,26 +1,52 @@
-using System.Net;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Infrastructure.AbstractServices;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace FinancialTrack.Application.Features.User.Commands.LogoutUser;
 
-public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommandRequest, ApiResult<object>>
+public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommandRequest, LogoutUserCommandResponse>
 {
-    private readonly IAuthService _authService;
+    
+    private readonly ITokenService _tokenService;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly ILogger<LogoutUserCommandHandler> _logger;
 
-    public LogoutUserCommandHandler(IAuthService authService)
+    public LogoutUserCommandHandler
+    (
+        ITokenService tokenService,
+        ICurrentUserService currentUserService,
+        ILogger<LogoutUserCommandHandler> logger
+    )
     {
-        _authService = authService;
+        _tokenService = tokenService;
+        _currentUserService = currentUserService;
+        _logger = logger;
     }
 
-    public async Task<ApiResult<object>> Handle(LogoutUserCommandRequest request,
+    public async Task<LogoutUserCommandResponse> Handle(LogoutUserCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var response = await _authService.LogoutAsync();
-        if (!response.Success)
-            return ApiResult<object>.FailureResult(message: response.Message, statusCode: HttpStatusCode.Unauthorized);
-        
-        return ApiResult<object>.SuccessResult(message: response.Message);
+        var accessToken = _currentUserService.Token;
+        var userId = _currentUserService.UserId;
+        var claims = _tokenService.GetClaims(accessToken);
+
+        if (claims == null || !claims.Any())
+        {
+            /*Claims null ise kullanıcı authorize şekilde bu komuta gelmiş fakat sistem tarafından üretilmeyen bir access tokena sahip demektir.*/
+            var ipAddress = _currentUserService.IPAddress;
+            _logger.LogWarning($"UnAuthorize request with access token: {accessToken} on ip: {ipAddress}");
+            return new ()
+            {
+                Message = "UnAuthorize request with access token",
+                Success = false
+            };
+        }
+
+        await _tokenService.RemoveOldTokens(userId);
+        return new LogoutUserCommandResponse()
+        {
+            Message = "User logged out successfully",
+            Success = true
+        };
     }
 }

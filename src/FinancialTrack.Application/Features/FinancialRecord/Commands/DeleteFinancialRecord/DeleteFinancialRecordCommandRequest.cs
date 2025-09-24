@@ -5,5 +5,5 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Commands.DeleteFin
 
 public class DeleteFinancialRecordCommandRequest:IRequest<DeleteFinancialRecordCommandResponse>
 {
-    
+    public long FinancialRecordId { get; set; }
 }

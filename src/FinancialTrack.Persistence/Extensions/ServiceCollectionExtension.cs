@@ -1,17 +1,14 @@
-using FinancialTrack.Application.Repositories.CategoryRepository;
-using FinancialTrack.Application.Repositories.FinancialRecordRepository;
-using FinancialTrack.Application.Repositories.RoleRepository;
-using FinancialTrack.Application.Repositories.UserRepository;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.UoW;
 using FinancialTrack.Domain.Options;
+using FinancialTrack.Infrastructure.UoW;
+using FinancialTrack.Persistence.AbstractRepositories.CategoryRepository;
+using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
+using FinancialTrack.Persistence.AbstractRepositories.RoleRepository;
+using FinancialTrack.Persistence.AbstractRepositories.UserRepository;
+using FinancialTrack.Persistence.ConcreteRepositories.CategoryRepositories;
+using FinancialTrack.Persistence.ConcreteRepositories.FinancialRecordRepositories;
+using FinancialTrack.Persistence.ConcreteRepositories.RoleRepositories;
+using FinancialTrack.Persistence.ConcreteRepositories.UserRepositories;
 using FinancialTrack.Persistence.Context;
-using FinancialTrack.Persistence.Repositories.CategoryRepositories;
-using FinancialTrack.Persistence.Repositories.FinancialRecordRepositories;
-using FinancialTrack.Persistence.Repositories.RoleRepositories;
-using FinancialTrack.Persistence.Repositories.UserRepositories;
-using FinancialTrack.Persistence.Services;
-using FinancialTrack.Persistence.UoW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,10 +36,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
         services.AddScoped<IFinancialRecordReadRepository, FinancialRecordReadRepository>();
         services.AddScoped<IFinancialRecordWriteRepository, FinancialRecordWriteRepository>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IRoleService, RoleService>();
-        services.AddScoped<ICategoryService, CategoryService>();
+       // services.AddScoped<IUserService, UserService>();
+        // services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

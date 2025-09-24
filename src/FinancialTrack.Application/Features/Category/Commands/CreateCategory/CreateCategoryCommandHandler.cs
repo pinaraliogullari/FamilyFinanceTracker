@@ -1,39 +1,54 @@
-using FinancialTrack.Application.DTOs;
-using FinancialTrack.Application.Repositories.CategoryRepository;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Infrastructure.AbstractServices;
+using FinancialTrack.Infrastructure.UoW;
+using FinancialTrack.Persistence.AbstractRepositories.CategoryRepository;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.Category.Commands.CreateCategory;
 
 public class
     CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommandRequest,
-    ApiResult<CreateCategoryCommandResponse>>
+    CreateCategoryCommandResponse>
 {
-    private readonly ICategoryService _categoryService;
+    private readonly ICategoryWriteRepository _categoryWriteRepository;
+    private readonly ICategoryReadRepository _categoryReadRepository;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-
-    public CreateCategoryCommandHandler(ICategoryService categoryService)
+    public CreateCategoryCommandHandler
+    (
+        ICategoryWriteRepository categoryWriteRepository,
+        ICategoryReadRepository categoryReadRepository,
+        ICurrentUserService currentUserService,
+        IGenericUnitofWork<FinancialTrackDbContext> uow
+    )
     {
-        _categoryService = categoryService;
+        _categoryWriteRepository = categoryWriteRepository;
+        _categoryReadRepository = categoryReadRepository;
+        _currentUserService = currentUserService;
+        _uow = uow;
     }
-
-    public async Task<ApiResult<CreateCategoryCommandResponse>> Handle(CreateCategoryCommandRequest request,
+    public async Task<CreateCategoryCommandResponse> Handle(CreateCategoryCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var createCategoryDto = new CreateCategoryDto()
+        var existCategory = _categoryReadRepository.GetWhere(x => x.Name ==request.Name, false).FirstOrDefault();
+        if (existCategory != null)
+            throw new InvalidOperationException("Category already exists");
+        var newCategory = new Domain.Entities.Category()
         {
             Name = request.Name,
+            IsCustom = !string.IsNullOrEmpty(_currentUserService.UserId),
             FinancialRecordType = request.FinancialRecordType,
         };
-        var newCategory = await _categoryService.CreateCategoryAsync(createCategoryDto);
-        var createCategoryCommandResponse = new CreateCategoryCommandResponse()
+        await _categoryWriteRepository.AddAsync(newCategory);
+        await _uow.SaveChangesAsync();
+
+        return new CreateCategoryCommandResponse()
         {
             Id = newCategory.Id,
+            IsCustom = newCategory.IsCustom,
             Name = newCategory.Name,
-            FinancialRecordType = newCategory.FinancialRecordType,
-            IsCustom = newCategory.IsCustom
+            FinancialRecordType = newCategory.FinancialRecordType
         };
-        return ApiResult<CreateCategoryCommandResponse>.SuccessResult(createCategoryCommandResponse);
     }
 }

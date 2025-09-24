@@ -1,7 +1,7 @@
 using System.Text;
-using FinancialTrack.Application.Services;
 using FinancialTrack.Domain.Options;
-using FinancialTrack.Infrastructure.Services;
+using FinancialTrack.Infrastructure.AbstractServices;
+using FinancialTrack.Infrastructure.ConcreteServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;

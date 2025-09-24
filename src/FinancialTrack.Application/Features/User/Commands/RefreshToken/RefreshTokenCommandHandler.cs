@@ -1,34 +1,37 @@
-using System.Net;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Constants;
+using FinancialTrack.Infrastructure.AbstractServices;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Commands.RefreshToken;
 
 public class
-    RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommandRequest, ApiResult<RefreshTokenCommandResponse>>
+    RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
 {
-    private readonly IAuthService _authService;
+   private readonly ITokenService _tokenService;
 
-    public RefreshTokenCommandHandler(IAuthService authService)
-    {
-        _authService = authService;
-    }
+   public RefreshTokenCommandHandler(ITokenService tokenService)
+   {
+       _tokenService = tokenService;
+   }
 
-    public async Task<ApiResult<RefreshTokenCommandResponse>> Handle(RefreshTokenCommandRequest request,
+   public async Task<RefreshTokenCommandResponse> Handle(RefreshTokenCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var newTokenResult =
-            await _authService.RefreshTokenLoginAsync(request.RefreshToken, request.ExpiredAccessToken);
-        if (newTokenResult.Token == null)
-        {
-            return ApiResult<RefreshTokenCommandResponse>.FailureResult(statusCode: HttpStatusCode.Unauthorized);
-        }
+        var claims = _tokenService.GetClaims(request.ExpiredAccessToken);
+        if (claims == null || !claims.Any())
+            throw new UnauthorizedAccessException("Invalid claims");
 
-        return ApiResult<RefreshTokenCommandResponse>.SuccessResult(new RefreshTokenCommandResponse
-            {
-                Token = newTokenResult.Token,
-            }
-        );
+        var userId = claims.FirstOrDefault(x => x.Type == ClaimKey.UserId)?.Value;
+        if (userId == null)
+            throw new UnauthorizedAccessException("User not found");
+        if (!_tokenService.IsValidRefrehToken(userId, request.RefreshToken))
+            throw new UnauthorizedAccessException("Invalid or expired refresh token");
+
+        await _tokenService.RemoveOldTokens(userId);
+        var newToken = await _tokenService.CreateAccessTokenAsync(claims.ToArray());
+        return new RefreshTokenCommandResponse()
+        {
+            Token = newToken,
+        };
     }
 }

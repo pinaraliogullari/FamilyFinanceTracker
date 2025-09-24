@@ -1,4 +1,5 @@
 using FinancialTrack.Application.Markers;
+using FinancialTrack.Core.Markers;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Queries.GetByIdUser;

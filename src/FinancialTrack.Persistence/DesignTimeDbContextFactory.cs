@@ -1,4 +1,4 @@
-using FinancialTrack.Application.Services;
+using FinancialTrack.Infrastructure.AbstractServices;
 using FinancialTrack.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

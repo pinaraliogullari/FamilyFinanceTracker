@@ -15,8 +15,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FinancialTrack.Application\FinancialTrack.Application.csproj" />
-      <ProjectReference Include="..\FinancialTrack.Infrastructure\FinancialTrack.Infrastructure.csproj" />
-      <ProjectReference Include="..\FinancialTrack.Persistence\FinancialTrack.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

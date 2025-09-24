@@ -1,33 +1,56 @@
-using FinancialTrack.Application.DTOs;
-using FinancialTrack.Application.Features.User.Commands.UpdateUserRole;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Exceptions;
+using FinancialTrack.Application.Features.User.Commands.UpdateUser;
+using FinancialTrack.Infrastructure.UoW;
+using FinancialTrack.Persistence.AbstractRepositories.RoleRepository;
+using FinancialTrack.Persistence.AbstractRepositories.UserRepository;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 
-namespace FinancialTrack.Application.Features.User.Commands.UpdateUser;
+namespace FinancialTrack.Application.Features.User.Commands.UpdateUserRole;
 
 public class
     UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRoleCommandRequest,
-    ApiResult<UpdateUserRoleCommandResponse>>
+    UpdateUserRoleCommandResponse>
 {
-    private readonly IUserService _userService;
+    private readonly IUserReadRepository _userReadRepository;
+    private readonly IUserWriteRepository _userWriteRepository;
+    private readonly IRoleReadRepository _roleReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public UpdateUserRoleCommandHandler(IUserService userService)
+    public UpdateUserRoleCommandHandler
+    (
+        IUserReadRepository userReadRepository,
+        IUserWriteRepository userWriteRepository,
+        IRoleReadRepository roleReadRepository,
+        IGenericUnitofWork<FinancialTrackDbContext> uow
+    )
     {
-        _userService = userService;
+        _userReadRepository = userReadRepository;
+        _userWriteRepository = userWriteRepository;
+        _roleReadRepository = roleReadRepository;
+        _uow = uow;
     }
 
-    public async Task<ApiResult<UpdateUserRoleCommandResponse>> Handle(UpdateUserRoleCommandRequest request,
+
+    public async Task<UpdateUserRoleCommandResponse> Handle(UpdateUserRoleCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var updateUserRole = new DTOs.UpdateUserRoleDto()
+        var user = await _userReadRepository.GetByIdAsync(request.UserId);
+        if (user == null)
+            throw new NotFoundException($"User with id {request.UserId} not found");
+
+        var role = await _roleReadRepository.GetByIdAsync(request.RoleId);
+        if (role == null)
+            throw new NotFoundException($"Role with id {request.RoleId} not found");
+
+        user.RoleId = request.RoleId;
+        _userWriteRepository.Update(user);
+        await _uow.SaveChangesAsync();
+
+        return new UpdateUserRoleCommandResponse()
         {
-            UserId = request.UserId,
-            RoleId = request.RoleId
+            RoleId = role.Id,
+            UserId = user.Id,
         };
-        await _userService.UpdateUserRoleAsync(updateUserRole);
-        
-        return ApiResult<UpdateUserRoleCommandResponse>.SuccessResult(new UpdateUserRoleCommandResponse()
-            { UserId = request.UserId, RoleId = request.RoleId }, "User's role has been updated.");
     }
 }

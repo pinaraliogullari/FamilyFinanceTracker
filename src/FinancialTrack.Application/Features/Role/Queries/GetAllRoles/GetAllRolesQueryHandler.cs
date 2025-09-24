@@ -1,22 +1,30 @@
-using FinancialTrack.Application.Features.User.Queries.GetAllUsers;
-using FinancialTrack.Application.Services;
+using FinancialTrack.Application.Exceptions;
+using FinancialTrack.Persistence.AbstractRepositories.RoleRepository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Application.Features.Role.Queries.GetAllRoles;
 
-public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQueryRequest, GetAllRolesQueryResponse>
+public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQueryRequest, List<GetAllRolesQueryResponse>>
 {
-    private readonly IRoleService _roleService;
+    private readonly IRoleReadRepository _roleReadRepository;
 
-    public GetAllRolesQueryHandler(IRoleService roleService)
+    public GetAllRolesQueryHandler(IRoleReadRepository roleReadRepository)
     {
-        _roleService = roleService;
+        _roleReadRepository = roleReadRepository;
     }
 
-    public async Task<GetAllRolesQueryResponse> Handle(GetAllRolesQueryRequest request,
+    public async Task<List<GetAllRolesQueryResponse>> Handle(GetAllRolesQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var roles = await _roleService.GetAllRolesAsync();
-        return new GetAllRolesQueryResponse { Roles = roles };
+        var roles = await _roleReadRepository.GetAll(false).ToListAsync();
+        if (roles == null || !roles.Any())
+            throw new NotFoundException("Role not found");
+
+        return roles.Select(x => new GetAllRolesQueryResponse()
+        {
+            Id = x.Id,
+            Name = x.Name,
+        }).ToList();
     }
 }

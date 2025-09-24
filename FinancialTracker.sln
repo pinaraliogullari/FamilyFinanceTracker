@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTrack.Persistence"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTrack.Infrastructure", "src\FinancialTrack.Infrastructure\FinancialTrack.Infrastructure.csproj", "{683AC93B-5B5A-45EB-92D8-F47DBF513123}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialTrack.Core", "src\FinancialTrack.Core\FinancialTrack.Core.csproj", "{7A4B6173-3DF3-48F5-8932-43AD94E68193}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{683AC93B-5B5A-45EB-92D8-F47DBF513123}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{683AC93B-5B5A-45EB-92D8-F47DBF513123}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{683AC93B-5B5A-45EB-92D8-F47DBF513123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A4B6173-3DF3-48F5-8932-43AD94E68193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A4B6173-3DF3-48F5-8932-43AD94E68193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A4B6173-3DF3-48F5-8932-43AD94E68193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A4B6173-3DF3-48F5-8932-43AD94E68193}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AF10D652-8C99-4C73-9E24-163DAA79D44F} = {D6042F49-DF92-4205-9985-2E8310AF4C59}
@@ -45,5 +51,6 @@ Global
 		{97B30D10-0B35-429A-B852-2D634ED98AD0} = {D6042F49-DF92-4205-9985-2E8310AF4C59}
 		{77201B78-0F99-4035-B117-AB4493E712D4} = {D6042F49-DF92-4205-9985-2E8310AF4C59}
 		{683AC93B-5B5A-45EB-92D8-F47DBF513123} = {D6042F49-DF92-4205-9985-2E8310AF4C59}
+		{7A4B6173-3DF3-48F5-8932-43AD94E68193} = {D6042F49-DF92-4205-9985-2E8310AF4C59}
 	EndGlobalSection
 EndGlobal

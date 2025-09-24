@@ -1,37 +1,59 @@
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Helpers;
+using FinancialTrack.Infrastructure.UoW;
+using FinancialTrack.Persistence.AbstractRepositories.RoleRepository;
+using FinancialTrack.Persistence.AbstractRepositories.UserRepository;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Commands.CreateUser;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, ApiResult<CreateUserCommandResponse>>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
 {
-    private readonly IUserService _userService;
+    private readonly IUserWriteRepository _userWriteRepository;
+    private readonly IUserReadRepository _userReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public CreateUserCommandHandler(IUserService userService)
+    public CreateUserCommandHandler
+    (
+        IUserReadRepository userReadRepository,
+        IUserWriteRepository userWriteRepository,
+        IRoleReadRepository roleReadRepository,
+        IGenericUnitofWork<FinancialTrackDbContext> uow
+    )
     {
-        _userService = userService;
+        _userReadRepository = userReadRepository;
+        _userWriteRepository = userWriteRepository;
+        _uow = uow;
     }
 
-    public async Task<ApiResult<CreateUserCommandResponse>> Handle(CreateUserCommandRequest request,
+    public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var createUserModel = new DTOs.CreateUserDto()
+        if (request.Password != request.ConfirmPassword)
+            throw new InvalidOperationException("Password and ConfirmPassword does not match");
+
+        var user = _userReadRepository.GetWhere(u => u.Email == request.Email).FirstOrDefault();
+        if (user != null)
+            throw new InvalidOperationException($"User with email {request.Email} has already been created");
+
+        var hashPassword = PasswordHasher.CreateHashPassword(request.Password);
+        var newUser = new Domain.Entities.User()
         {
             FirstName = request.Firstname,
             LastName = request.Lastname,
             Email = request.Email,
-            Password = request.Password,
-            ConfirmPassword = request.ConfirmPassword,
+            Password = hashPassword,
+            RoleId = 1,
         };
-        var response = await _userService.CreateUserAsync(createUserModel);
-        var createUserCommandResponse = new CreateUserCommandResponse()
+        await _userWriteRepository.AddAsync(newUser);
+        await _uow.SaveChangesAsync();
+
+        return new CreateUserCommandResponse()
         {
-            Id = response.Id,
-            Email = response.Email,
-            Firstname = response.Firstname,
-            Lastname = response.Lastname,
+            Id = newUser.Id,
+            Firstname = newUser.FirstName,
+            Lastname = newUser.LastName,
+            Email = newUser.Email,
         };
-        return ApiResult<CreateUserCommandResponse>.SuccessResult(createUserCommandResponse);
     }
 }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace FinancialTrack.Application.Features.User.Commands.LogoutUser;
 
-public class LogoutUserCommandRequest: IRequest<ApiResult<object>>
+public class LogoutUserCommandRequest: IRequest<LogoutUserCommandResponse>
 {
    
 }

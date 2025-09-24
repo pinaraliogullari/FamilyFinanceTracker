@@ -1,9 +1,9 @@
-using FinancialTrack.Application.Features.User.Queries.GetByIdUser;
-using MediatR;
+using FinancialTrack.Application.Markers;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetByIdFinancialRecord;
 
-public class GetByIdFinancialRecordQueryRequest:IRequest<GetByIdFinancialRecordQueryResponse>
+public class GetByIdFinancialRecordQueryRequest:IBaseQueryRequest<GetByIdFinancialRecordQueryResponse>
 {
     
 }

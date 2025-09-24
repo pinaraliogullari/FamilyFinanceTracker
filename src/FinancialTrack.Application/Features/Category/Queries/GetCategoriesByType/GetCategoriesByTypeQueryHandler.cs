@@ -1,34 +1,34 @@
-using FinancialTrack.Application.DTOs;
-using FinancialTrack.Application.Services;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Application.Exceptions;
+using FinancialTrack.Persistence.AbstractRepositories.CategoryRepository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Application.Features.Category.Queries.GetCategoriesByType;
 
 public class
-    GetCategoriesByTypeQueryHandler : IRequestHandler<GetCategoriesByTypeQueryRequest,ApiResult<GetCategoriesByTypeQueryResponse>>
+    GetCategoriesByTypeQueryHandler : IRequestHandler<GetCategoriesByTypeQueryRequest,
+    List<GetCategoriesByTypeQueryResponse>>
 {
-    private readonly ICategoryService _categoryService;
+    private readonly ICategoryReadRepository _categoryReadRepository;
 
-    public GetCategoriesByTypeQueryHandler(ICategoryService categoryService)
+    public GetCategoriesByTypeQueryHandler(ICategoryReadRepository categoryReadRepository)
     {
-        _categoryService = categoryService;
+        _categoryReadRepository = categoryReadRepository;
     }
 
-    public async Task<ApiResult<GetCategoriesByTypeQueryResponse>> Handle(GetCategoriesByTypeQueryRequest request,
+    public async Task<List<GetCategoriesByTypeQueryResponse>> Handle(GetCategoriesByTypeQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var categories=await _categoryService.GetCategoriesByTypeAsync(request.RecordType);
-        var response = new GetCategoriesByTypeQueryResponse()
+        var categories = await _categoryReadRepository.GetWhere(c => c.FinancialRecordType == request.RecordType, false)
+            .ToListAsync();
+        if (categories == null || !categories.Any())
+            throw new NotFoundException("Any category not found");
+        return categories.Select(x => new GetCategoriesByTypeQueryResponse()
         {
-            Categories = categories.Select(x => new CategoryDto()
-            {
-                Id = x.Id,
-                IsCustom = x.IsCustom,
-                Name = x.Name,
-                FinancialRecordType = x.FinancialRecordType
-            }).ToList()
-        };
-        return ApiResult<GetCategoriesByTypeQueryResponse>.SuccessResult(response); 
+            Id = x.Id,
+            IsCustom = x.IsCustom,
+            Name = x.Name,
+            FinancialRecordType = x.FinancialRecordType
+        }).ToList();
     }
 }

@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using FinancialTrack.Application.Services;
 using FinancialTrack.Domain.Entities;
 using FinancialTrack.Domain.Entities.Common;
+using FinancialTrack.Infrastructure.AbstractServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Persistence.Context;

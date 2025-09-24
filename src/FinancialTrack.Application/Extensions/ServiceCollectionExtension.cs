@@ -1,4 +1,4 @@
-using FinancialTrack.Application.Behaviors;
+using FinancialTrack.Infrastructure.Behaviors;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
