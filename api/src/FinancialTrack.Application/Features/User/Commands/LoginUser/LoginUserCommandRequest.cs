@@ -1,9 +1,8 @@
-using FinancialTrack.Application.Wrappers;
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.LoginUser;
 
-public class LoginUserCommandRequest: IRequest<LoginUserCommandResponse>
+public class LoginUserCommandRequest: IBaseCommandRequest<LoginUserCommandResponse>
 {
     public string  Email { get; set; }
     public string  Password { get; set; }  

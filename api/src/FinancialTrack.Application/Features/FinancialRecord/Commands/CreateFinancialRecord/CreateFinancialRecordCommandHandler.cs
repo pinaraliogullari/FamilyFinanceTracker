@@ -1,5 +1,4 @@
 using FinancialTrack.Core.UoW;
-using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
 using FinancialTrack.Persistence.Context;
 using MediatR;
 
@@ -8,17 +7,10 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Commands.CreateFin
 public class CreateFinancialRecordCommandHandler : IRequestHandler<CreateFinancialRecordCommandRequest,
     CreateFinancialRecordCommandResponse>
 {
-    private readonly IFinancialRecordWriteRepository _financialRecordWriteRepository;
     private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-
-    public CreateFinancialRecordCommandHandler
-    (
-        IFinancialRecordWriteRepository financialRecordWriteRepository,
-        IGenericUnitofWork<FinancialTrackDbContext> uow
-    )
+    public CreateFinancialRecordCommandHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _financialRecordWriteRepository = financialRecordWriteRepository;
         _uow = uow;
     }
 
@@ -33,8 +25,7 @@ public class CreateFinancialRecordCommandHandler : IRequestHandler<CreateFinanci
             UserId = request.UserId,
             CategoryId = request.CategoryId
         };
-        await _financialRecordWriteRepository.AddAsync(financialRecord);
-        //await _uow.SaveChangesAsync();
+        await _uow.GetWriteRepository<Domain.Entities.FinancialRecord>().AddAsync(financialRecord);
         return new CreateFinancialRecordCommandResponse
         {
             FinancialRecordId = financialRecord.Id,

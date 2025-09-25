@@ -1,5 +1,6 @@
 using FinancialTrack.Application.Exceptions;
-using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
+using FinancialTrack.Core.UoW;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,17 +9,18 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetUsersFi
 public class GetUsersFinancialRecordQueryHandler : IRequestHandler<GetUsersFinancialRecordQueryRequest,
     List<GetUsersFinancialRecordsQueryResponse>>
 {
-    private readonly IFinancialRecordReadRepository _financialRecordReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public GetUsersFinancialRecordQueryHandler(IFinancialRecordReadRepository financialRecordReadRepository)
+    public GetUsersFinancialRecordQueryHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _financialRecordReadRepository = financialRecordReadRepository;
+        _uow = uow;
     }
 
     public async Task<List<GetUsersFinancialRecordsQueryResponse>> Handle(GetUsersFinancialRecordQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var financialRecords = await _financialRecordReadRepository.GetWhere(x => x.UserId == request.UserId, false)
+        var financialRecords = await _uow.GetReadRepository<Domain.Entities.FinancialRecord>()
+            .GetWhere(x => x.UserId == request.UserId, false)
             .ToListAsync();
         if (!financialRecords.Any())
             throw new NotFoundException($"User with Id {request.UserId} has no financial records.");

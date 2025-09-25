@@ -1,5 +1,6 @@
 using FinancialTrack.Application.Exceptions;
-using FinancialTrack.Persistence.AbstractRepositories.CategoryRepository;
+using FinancialTrack.Core.UoW;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,17 +10,18 @@ public class
     GetCategoriesByTypeQueryHandler : IRequestHandler<GetCategoriesByTypeQueryRequest,
     List<GetCategoriesByTypeQueryResponse>>
 {
-    private readonly ICategoryReadRepository _categoryReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public GetCategoriesByTypeQueryHandler(ICategoryReadRepository categoryReadRepository)
+    public GetCategoriesByTypeQueryHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _categoryReadRepository = categoryReadRepository;
+        _uow = uow;
     }
 
     public async Task<List<GetCategoriesByTypeQueryResponse>> Handle(GetCategoriesByTypeQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var categories = await _categoryReadRepository.GetWhere(c => c.FinancialRecordType == request.RecordType, false)
+        var categories = await _uow.GetReadRepository<Domain.Entities.Category>()
+            .GetWhere(c => c.FinancialRecordType == request.RecordType, false)
             .ToListAsync();
         if (categories == null || !categories.Any())
             throw new NotFoundException("Any category not found");

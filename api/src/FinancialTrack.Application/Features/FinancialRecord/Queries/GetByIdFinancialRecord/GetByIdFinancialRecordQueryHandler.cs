@@ -1,6 +1,6 @@
 using FinancialTrack.Application.Exceptions;
-using FinancialTrack.Application.Features.User.Queries.GetByIdUser;
-using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
+using FinancialTrack.Core.UoW;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetByIdFinancialRecord;
@@ -9,17 +9,18 @@ public class
     GetByIdFinancialRecordQueryHandler : IRequestHandler<GetByIdFinancialRecordQueryRequest,
     GetByIdFinancialRecordQueryResponse>
 {
-    private readonly IFinancialRecordReadRepository _financialRecordReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public GetByIdFinancialRecordQueryHandler(IFinancialRecordReadRepository financialRecordReadRepository)
+    public GetByIdFinancialRecordQueryHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _financialRecordReadRepository = financialRecordReadRepository;
+        _uow = uow;
     }
 
     public async Task<GetByIdFinancialRecordQueryResponse> Handle(GetByIdFinancialRecordQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var financialRecord = await _financialRecordReadRepository.GetByIdAsync(request.FinancialRecordId, false);
+        var financialRecord = await _uow.GetReadRepository<Domain.Entities.FinancialRecord>()
+            .GetByIdAsync(request.FinancialRecordId, false);
         if (financialRecord == null)
             throw new NotFoundException($"FinancialRecord with id {request.FinancialRecordId} not found");
         return new GetByIdFinancialRecordQueryResponse()

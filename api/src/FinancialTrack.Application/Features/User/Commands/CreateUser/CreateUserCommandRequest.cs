@@ -1,9 +1,8 @@
-using FinancialTrack.Application.Wrappers;
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.CreateUser;
 
-public class CreateUserCommandRequest:IRequest<CreateUserCommandResponse>
+public class CreateUserCommandRequest:IBaseCommandRequest<CreateUserCommandResponse>
 {
     public string Firstname { get; set; }
     public string Lastname { get; set; }

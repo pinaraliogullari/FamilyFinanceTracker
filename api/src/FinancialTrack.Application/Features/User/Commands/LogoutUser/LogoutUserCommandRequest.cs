@@ -1,9 +1,8 @@
-using FinancialTrack.Application.Wrappers;
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.LogoutUser;
 
-public class LogoutUserCommandRequest: IRequest<LogoutUserCommandResponse>
+public class LogoutUserCommandRequest: IBaseCommandRequest<LogoutUserCommandResponse>
 {
    
 }

@@ -67,6 +67,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped(typeof(ICacheService<>),typeof(CacheService<>));
         services.AddScoped(typeof(IGenericUnitofWork<>), typeof(GenericUnitofWork<>));
+        services.AddScoped(typeof(ICurrentUserService),typeof(CurrentUserService));
 
         return services;
     }

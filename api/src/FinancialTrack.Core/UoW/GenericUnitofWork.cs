@@ -1,16 +1,21 @@
+using FinancialTrack.Domain.Entities.Common;
+using FinancialTrack.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialTrack.Core.UoW;
 
 public class GenericUnitofWork<TContext> : IGenericUnitofWork<TContext> where TContext : DbContext
 {
     private readonly TContext _dbContext;
+    private readonly IServiceProvider _serviceProvider;
     private IDbContextTransaction _transaction;
 
-    public GenericUnitofWork(TContext dbContext)
+    public GenericUnitofWork(TContext dbContext, IServiceProvider serviceProvider)
     {
         _dbContext = dbContext;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)
@@ -44,6 +49,12 @@ public class GenericUnitofWork<TContext> : IGenericUnitofWork<TContext> where TC
             await DisposeTransactionAsync();
         }
     }
+
+    public IReadRepository<TEntity> GetReadRepository<TEntity>() where TEntity : BaseEntity
+    =>_serviceProvider.GetRequiredService<IReadRepository<TEntity>>();
+
+    public IWriteRepository<TEntity> GetWriteRepository<TEntity>() where TEntity : BaseEntity
+    =>_serviceProvider.GetRequiredService<IWriteRepository<TEntity>>();
 
     private async Task DisposeTransactionAsync()
     {

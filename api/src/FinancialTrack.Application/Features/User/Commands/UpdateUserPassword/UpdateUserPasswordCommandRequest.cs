@@ -1,9 +1,8 @@
-using FinancialTrack.Application.Wrappers;
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.UpdateUserPassword;
 
-public class UpdateUserPasswordCommandRequest : IRequest<UpdateUserPasswordCommandResponse>
+public class UpdateUserPasswordCommandRequest : IBaseCommandRequest<UpdateUserPasswordCommandResponse>
 {
     public long UserId { get; set; }
     public string OldPassword { get; set; }

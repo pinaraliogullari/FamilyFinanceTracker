@@ -1,9 +1,10 @@
 using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Core.Markers;
 using MediatR;
 
 namespace FinancialTrack.Application.Features.FinancialRecord.Commands.UpdateFinancialRecord;
 
-public class UpdateFinancialRecordCommandRequest : IRequest<UpdateFinancialRecordCommandResponse>
+public class UpdateFinancialRecordCommandRequest : IBaseCommandRequest<UpdateFinancialRecordCommandResponse>
 {
     public long FinancialRecordId { get; set; }
     public decimal? Amount { get; set; }

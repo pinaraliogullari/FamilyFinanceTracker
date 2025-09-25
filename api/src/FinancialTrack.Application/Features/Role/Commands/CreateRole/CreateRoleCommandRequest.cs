@@ -1,8 +1,8 @@
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.Role.Commands.CreateRole;
 
-public class CreateRoleCommandRequest : IRequest<CreateRoleCommandResponse>
+public class CreateRoleCommandRequest : IBaseCommandRequest<CreateRoleCommandResponse>
 {
     public string Name { get; set; }
 }

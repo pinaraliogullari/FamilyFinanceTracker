@@ -1,5 +1,6 @@
 using FinancialTrack.Application.Exceptions;
-using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
+using FinancialTrack.Core.UoW;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,17 +10,18 @@ public class
     GetAllFinancialRecordsQueryHandler : IRequestHandler<GetAllFinancialRecordsQueryRequest,
     List<GetAllFinancialRecordsQueryResponse>>
 {
-    private readonly IFinancialRecordReadRepository _financialRecordReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public GetAllFinancialRecordsQueryHandler(IFinancialRecordReadRepository financialRecordReadRepository)
+    public GetAllFinancialRecordsQueryHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _financialRecordReadRepository = financialRecordReadRepository;
+        _uow = uow;
     }
 
     public async Task<List<GetAllFinancialRecordsQueryResponse>> Handle(GetAllFinancialRecordsQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var financialRecords = await _financialRecordReadRepository.GetAll(false).ToListAsync();
+        var financialRecords =
+            await _uow.GetReadRepository<Domain.Entities.FinancialRecord>().GetAll(false).ToListAsync();
         if (financialRecords == null || !financialRecords.Any())
             throw new NotFoundException("Financial Record Not Found");
         return financialRecords.Select(x => new GetAllFinancialRecordsQueryResponse()

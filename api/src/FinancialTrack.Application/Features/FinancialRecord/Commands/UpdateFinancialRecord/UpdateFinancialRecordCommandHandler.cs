@@ -1,7 +1,6 @@
 using FinancialTrack.Application.Exceptions;
 using FinancialTrack.Core.AbstractServices;
 using FinancialTrack.Core.UoW;
-using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
 using FinancialTrack.Persistence.Context;
 using MediatR;
 
@@ -10,21 +9,15 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Commands.UpdateFin
 public class UpdateFinancialRecordCommandHandler : IRequestHandler<UpdateFinancialRecordCommandRequest,
     UpdateFinancialRecordCommandResponse>
 {
-    private readonly IFinancialRecordReadRepository _financialRecordReadRepository;
-    private readonly IFinancialRecordWriteRepository _financialRecordWriteRepository;
     private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
     private readonly ICurrentUserService _currentUserService;
 
     public UpdateFinancialRecordCommandHandler
     (
-        IFinancialRecordReadRepository financialRecordReadRepository,
-        IFinancialRecordWriteRepository financialRecordWriteRepository,
         IGenericUnitofWork<FinancialTrackDbContext> uow,
         ICurrentUserService currentUserService
     )
     {
-        _financialRecordReadRepository = financialRecordReadRepository;
-        _financialRecordWriteRepository = financialRecordWriteRepository;
         _uow = uow;
         _currentUserService = currentUserService;
     }
@@ -34,7 +27,7 @@ public class UpdateFinancialRecordCommandHandler : IRequestHandler<UpdateFinanci
         CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserService.UserId;
-        var financialRecord = await _financialRecordReadRepository.GetByIdAsync(request.FinancialRecordId);
+        var financialRecord = await _uow.GetReadRepository<Domain.Entities.FinancialRecord>().GetByIdAsync(request.FinancialRecordId);
         if (financialRecord == null)
             throw new NotFoundException($"Financial record with id {request.FinancialRecordId} not found");
 
@@ -43,9 +36,9 @@ public class UpdateFinancialRecordCommandHandler : IRequestHandler<UpdateFinanci
 
         if (request.Amount.HasValue) financialRecord.Amount = request.Amount.Value;
         if (request.CategoryId.HasValue) financialRecord.CategoryId = request.CategoryId.Value;
-        if (!string.IsNullOrEmpty(request.Description)) financialRecord.Description = request.Description;
-        //await _uow.SaveChangesAsync();
-        _financialRecordWriteRepository.Update(financialRecord);
+        if (!string.IsNullOrWhiteSpace(request.Description)) financialRecord.Description = request.Description;
+        
+        _uow.GetWriteRepository<Domain.Entities.FinancialRecord>().Update(financialRecord);
 
         return new UpdateFinancialRecordCommandResponse
         {

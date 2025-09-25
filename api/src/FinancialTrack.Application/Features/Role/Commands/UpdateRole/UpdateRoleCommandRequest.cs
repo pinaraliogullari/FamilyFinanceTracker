@@ -1,8 +1,8 @@
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.Role.Commands.UpdateRole;
 
-public class UpdateRoleCommandRequest : IRequest<UpdateRoleCommandResponse>
+public class UpdateRoleCommandRequest : IBaseCommandRequest<UpdateRoleCommandResponse>
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

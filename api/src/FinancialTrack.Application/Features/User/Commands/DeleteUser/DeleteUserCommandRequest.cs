@@ -1,9 +1,8 @@
-using FinancialTrack.Application.Wrappers;
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.DeleteUser;
 
-public class DeleteUserCommandRequest:IRequest<DeleteUserCommandResponse>
+public class DeleteUserCommandRequest:IBaseCommandRequest<DeleteUserCommandResponse>
 {
     public long UserId { get; set; }
 }

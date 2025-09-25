@@ -1,5 +1,6 @@
 using FinancialTrack.Application.Exceptions;
-using FinancialTrack.Persistence.AbstractRepositories.RoleRepository;
+using FinancialTrack.Core.UoW;
+using FinancialTrack.Persistence.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,17 +8,17 @@ namespace FinancialTrack.Application.Features.Role.Queries.GetAllRoles;
 
 public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQueryRequest, List<GetAllRolesQueryResponse>>
 {
-    private readonly IRoleReadRepository _roleReadRepository;
+    private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public GetAllRolesQueryHandler(IRoleReadRepository roleReadRepository)
+    public GetAllRolesQueryHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _roleReadRepository = roleReadRepository;
+        _uow = uow;
     }
 
     public async Task<List<GetAllRolesQueryResponse>> Handle(GetAllRolesQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var roles = await _roleReadRepository.GetAll(false).ToListAsync();
+        var roles = await _uow.GetReadRepository<Domain.Entities.Role>().GetAll(false).ToListAsync();
         if (roles == null || !roles.Any())
             throw new NotFoundException("Role not found");
 

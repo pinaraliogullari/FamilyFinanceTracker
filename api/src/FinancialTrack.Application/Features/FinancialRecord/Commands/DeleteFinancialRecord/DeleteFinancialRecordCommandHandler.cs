@@ -1,7 +1,6 @@
 using FinancialTrack.Application.Exceptions;
 using FinancialTrack.Application.Features.User.Commands.DeleteUser;
 using FinancialTrack.Core.UoW;
-using FinancialTrack.Persistence.AbstractRepositories.FinancialRecordRepository;
 using FinancialTrack.Persistence.Context;
 using MediatR;
 
@@ -10,31 +9,22 @@ namespace FinancialTrack.Application.Features.FinancialRecord.Commands.DeleteFin
 public class DeleteFinancialRecordCommandHandler : IRequestHandler<DeleteFinancialRecordCommandRequest,
     DeleteFinancialRecordCommandResponse>
 {
-    private readonly IFinancialRecordReadRepository _financialRecordReadRepository;
-    private readonly IFinancialRecordWriteRepository _financialRecordWriteRepository;
     private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
 
-    public DeleteFinancialRecordCommandHandler
-    (
-        IFinancialRecordReadRepository financialRecordReadRepository,
-        IFinancialRecordWriteRepository financialRecordWriteRepository,
-        IGenericUnitofWork<FinancialTrackDbContext> uow
-    )
+
+    public DeleteFinancialRecordCommandHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
     {
-        _financialRecordReadRepository = financialRecordReadRepository;
-        _financialRecordWriteRepository = financialRecordWriteRepository;
         _uow = uow;
     }
-
 
     public async Task<DeleteFinancialRecordCommandResponse> Handle(DeleteFinancialRecordCommandRequest request,
         CancellationToken cancellationToken)
     {
-        var category = await _financialRecordReadRepository.GetByIdAsync(request.FinancialRecordId);
+        var category = await _uow.GetReadRepository<Domain.Entities.FinancialRecord>()
+            .GetByIdAsync(request.FinancialRecordId);
         if (category == null)
             throw new NotFoundException($"FinancialRecord with id {request.FinancialRecordId} not found");
-        _financialRecordWriteRepository.Remove(category);
-        await _uow.SaveChangesAsync(cancellationToken);
+        _uow.GetWriteRepository<Domain.Entities.FinancialRecord>().Remove(category);
         return new DeleteFinancialRecordCommandResponse()
         {
             FinancialRecordId = request.FinancialRecordId

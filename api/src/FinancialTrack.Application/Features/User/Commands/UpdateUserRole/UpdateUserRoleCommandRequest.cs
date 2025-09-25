@@ -1,9 +1,9 @@
 using FinancialTrack.Application.Features.User.Commands.UpdateUser;
-using MediatR;
+using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.UpdateUserRole;
 
-public class UpdateUserRoleCommandRequest : IRequest<UpdateUserRoleCommandResponse>
+public class UpdateUserRoleCommandRequest : IBaseCommandRequest<UpdateUserRoleCommandResponse>
 {
     public long UserId { get; set; }
     public long RoleId { get; set; }
