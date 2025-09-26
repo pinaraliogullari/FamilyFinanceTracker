@@ -6,10 +6,17 @@ import { Card, CardHeader, CardDescription, CardContent, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Separator } from '@radix-ui/react-separator'
 import Link from 'next/link'
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // API call for sign in
+    router.push("/");
+  }
 
   return (
     <div className='h-full flex items-center justify-center bg-[#1b0918]'>
