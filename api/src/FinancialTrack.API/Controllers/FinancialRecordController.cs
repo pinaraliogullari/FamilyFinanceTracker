@@ -20,24 +20,22 @@ public class FinancialRecordController : BaseController
     }
 
     [HttpPost]
-    [Route("create-record")]
-    public async Task<IActionResult> CreateFinancialRecord(CreateFinancialRecordCommandRequest request)
+    public async Task<IActionResult> CreateFinancialRecord([FromBody] CreateFinancialRecordCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response, httpStatusCode: HttpStatusCode.Created);
     }
 
-    [HttpPost]
-    [Route("update-record")]
-    public async Task<IActionResult> UpdateFinancialRecord(UpdateFinancialRecordCommandRequest request)
+    [HttpPut]
+    public async Task<IActionResult> UpdateFinancialRecord([FromBody] UpdateFinancialRecordCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response);
     }
 
-    [HttpPost]
-    [Route("delete-record/{financialRecordId}")]
-    public async Task<IActionResult> DeleteFinancialRecord(long financialRecordId)
+    [HttpDelete]
+    [Route("{financialRecordId}")]
+    public async Task<IActionResult> DeleteFinancialRecord([FromRoute] long financialRecordId)
     {
         var response = await _mediator.Send(new DeleteFinancialRecordCommandRequest
             { FinancialRecordId = financialRecordId });
@@ -45,7 +43,6 @@ public class FinancialRecordController : BaseController
     }
 
     [HttpGet]
-    [Route("all-records")]
     public async Task<IActionResult> GetAllFinancialRecords()
     {
         var response = await _mediator.Send(new GetAllFinancialRecordsQueryRequest());
@@ -54,16 +51,15 @@ public class FinancialRecordController : BaseController
 
     [HttpGet]
     [Route("record/{recordId}")]
-    public async Task<IActionResult> GetRecordById(long recordId)
+    public async Task<IActionResult> GetRecordById([FromRoute] long recordId)
     {
         var response = await _mediator.Send(new GetByIdFinancialRecordQueryRequest { FinancialRecordId = recordId });
         return HandleApiResponse(response);
     }
 
-    // belli bir userın kaydını getir.
     [HttpGet]
     [Route("user/{userId}")]
-    public async Task<IActionResult> GetUsersFinancialRecords(long userId)
+    public async Task<IActionResult> GetUsersFinancialRecords([FromRoute] long userId)
     {
         var response = await _mediator.Send(new GetUsersFinancialRecordQueryRequest { UserId = userId });
         return HandleApiResponse(response);

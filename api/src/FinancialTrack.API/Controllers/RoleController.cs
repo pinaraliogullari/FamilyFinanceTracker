@@ -14,15 +14,13 @@ public class RoleController : BaseController
         _mediator = mediator;
     }
 
-    [HttpPost]
-    [Route("update-role")]
-    public async Task<IActionResult> UpdateRole(UpdateUserRoleCommandRequest request)
+    [HttpPut]
+    public async Task<IActionResult> UpdateRole([FromBody]UpdateUserRoleCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response);
     }
     [HttpGet]
-    [Route("get-roles")]
     public async Task<IActionResult> GetAllRoles()
     {
         var response = await _mediator.Send(new GetAllRolesQueryRequest());

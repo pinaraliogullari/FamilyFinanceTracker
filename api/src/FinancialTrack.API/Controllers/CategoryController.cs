@@ -19,15 +19,13 @@ public class CategoryController : BaseController
     }
 
     [HttpPost]
-    [Route("create-category")]
-    public async Task<IActionResult> CreateCategory(CreateCategoryCommandRequest request)
+    public async Task<IActionResult> CreateCategory([FromBody]CreateCategoryCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
     }
 
     [HttpGet]
-    [Route("get-categories")]
     public async Task<IActionResult> GetCategories()
     {
         var response = await _mediator.Send(new GetAllCategoriesQueryRequest());
@@ -36,15 +34,15 @@ public class CategoryController : BaseController
 
     [HttpGet]
     [Route("type/{recordType}")]
-    public async Task<IActionResult> GetCategoriesByRecordType(FinancialRecordType recordType)
+    public async Task<IActionResult> GetCategoriesByRecordType([FromRoute]FinancialRecordType recordType)
     {
         var response = await _mediator.Send(new GetCategoriesByTypeQueryRequest { RecordType = recordType });
         return HandleApiResponse(response);
     }
     
     [HttpDelete]
-    [Route("delete-category/{categoryId}")]
-    public async Task<IActionResult> DeleteCategory(long categoryId)
+    [Route("{categoryId}")]
+    public async Task<IActionResult> DeleteCategory([FromRoute]long categoryId)
     {
         var response = await _mediator.Send(new DeleteCategoryCommandRequest{ CategoryId = categoryId });
         return HandleApiResponse(response);
