@@ -1,5 +1,5 @@
 using System.Net;
-using FinancialTrack.Application.Wrappers;
+using FinancialTrack.Core.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialTrack.API.Controllers;
@@ -8,16 +8,9 @@ namespace FinancialTrack.API.Controllers;
 [Route("api/[controller]")]
 public abstract class BaseController : ControllerBase
 {
-    protected IActionResult HandleApiResponse<T>(T? result, string successMessage = "Operation successful",
+    protected IApiResult HandleApiResponse<T>(T? result = default, string successMessage = "Operation successful",
         HttpStatusCode httpStatusCode = HttpStatusCode.OK)
     {
-        //data-success
-        if (result is not null)
-        {
-            return StatusCode((int)httpStatusCode, ApiResult<T>.SuccessResult(result, successMessage, httpStatusCode));
-        }
-
-        //no data-success
-        return StatusCode((int)httpStatusCode, ApiResult<T>.SuccessResult(successMessage, httpStatusCode));
+        return new SuccessResult<T>(result, successMessage, httpStatusCode);
     }
 }

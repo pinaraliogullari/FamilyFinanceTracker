@@ -3,6 +3,7 @@ using FinancialTrack.Application.Features.User.Commands.CreateUser;
 using FinancialTrack.Application.Features.User.Commands.LoginUser;
 using FinancialTrack.Application.Features.User.Commands.LogoutUser;
 using FinancialTrack.Application.Features.User.Commands.RefreshToken;
+using FinancialTrack.Core.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,28 +19,28 @@ public class AuthController : BaseController
     }
     [HttpPost]
     [Route("register")]
-    public async Task<IActionResult> CreateUser([FromBody]CreateUserCommandRequest request)
+    public async Task<IApiResult> CreateUser([FromBody]CreateUserCommandRequest request)
     {
         var response=await _mediator.Send(request);
         return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
     }
     [HttpPost]
     [Route("login")]
-    public async Task<IActionResult> Login([FromBody]LoginUserCommandRequest request)
+    public async Task<IApiResult> Login([FromBody]LoginUserCommandRequest request)
     {
         var response=await _mediator.Send(request);
         return HandleApiResponse(response);
     }
     [HttpPost]
     [Route("logout")]
-    public async Task<IActionResult> Logout()
+    public async Task<IApiResult> Logout()
     {
         var response=await _mediator.Send(new LogoutUserCommandRequest());
         return HandleApiResponse(response);
     }
     [HttpPost]
     [Route("refresh-token")]
-    public async Task<IActionResult> LoginByRefreshToken([FromBody]RefreshTokenCommandRequest request)
+    public async Task<IApiResult> LoginByRefreshToken([FromBody]RefreshTokenCommandRequest request)
     {
         var response=await _mediator.Send(request);
         return HandleApiResponse(response);

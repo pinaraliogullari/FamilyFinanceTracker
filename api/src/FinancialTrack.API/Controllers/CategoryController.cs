@@ -3,6 +3,7 @@ using FinancialTrack.Application.Features.Category.Commands.CreateCategory;
 using FinancialTrack.Application.Features.Category.Commands.DeleteCategory;
 using FinancialTrack.Application.Features.Category.Queries.GetAllCategories;
 using FinancialTrack.Application.Features.Category.Queries.GetCategoriesByType;
+using FinancialTrack.Core.Results;
 using FinancialTrack.Domain.Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,14 @@ public class CategoryController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateCategory([FromBody]CreateCategoryCommandRequest request)
+    public async Task<IApiResult> CreateCategory([FromBody]CreateCategoryCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCategories()
+    public async Task<IApiResult> GetCategories()
     {
         var response = await _mediator.Send(new GetAllCategoriesQueryRequest());
         return HandleApiResponse(response);
@@ -34,7 +35,7 @@ public class CategoryController : BaseController
 
     [HttpGet]
     [Route("type/{recordType}")]
-    public async Task<IActionResult> GetCategoriesByRecordType([FromRoute]FinancialRecordType recordType)
+    public async Task<IApiResult> GetCategoriesByRecordType([FromRoute]FinancialRecordType recordType)
     {
         var response = await _mediator.Send(new GetCategoriesByTypeQueryRequest { RecordType = recordType });
         return HandleApiResponse(response);
@@ -42,7 +43,7 @@ public class CategoryController : BaseController
     
     [HttpDelete]
     [Route("{categoryId}")]
-    public async Task<IActionResult> DeleteCategory([FromRoute]long categoryId)
+    public async Task<IApiResult> DeleteCategory([FromRoute]long categoryId)
     {
         var response = await _mediator.Send(new DeleteCategoryCommandRequest{ CategoryId = categoryId });
         return HandleApiResponse(response);

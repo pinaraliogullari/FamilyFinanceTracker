@@ -5,6 +5,7 @@ using FinancialTrack.Application.Features.FinancialRecord.Commands.UpdateFinanci
 using FinancialTrack.Application.Features.FinancialRecord.Queries.GetAllFinancialRecords;
 using FinancialTrack.Application.Features.FinancialRecord.Queries.GetByIdFinancialRecord;
 using FinancialTrack.Application.Features.FinancialRecord.Queries.GetUsersFinancialRecords;
+using FinancialTrack.Core.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,14 +21,14 @@ public class FinancialRecordController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFinancialRecord([FromBody] CreateFinancialRecordCommandRequest request)
+    public async Task<IApiResult> CreateFinancialRecord([FromBody] CreateFinancialRecordCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response, httpStatusCode: HttpStatusCode.Created);
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateFinancialRecord([FromBody] UpdateFinancialRecordCommandRequest request)
+    public async Task<IApiResult> UpdateFinancialRecord([FromBody] UpdateFinancialRecordCommandRequest request)
     {
         var response = await _mediator.Send(request);
         return HandleApiResponse(response);
@@ -35,7 +36,7 @@ public class FinancialRecordController : BaseController
 
     [HttpDelete]
     [Route("{financialRecordId}")]
-    public async Task<IActionResult> DeleteFinancialRecord([FromRoute] long financialRecordId)
+    public async Task<IApiResult> DeleteFinancialRecord([FromRoute] long financialRecordId)
     {
         var response = await _mediator.Send(new DeleteFinancialRecordCommandRequest
             { FinancialRecordId = financialRecordId });
@@ -43,7 +44,7 @@ public class FinancialRecordController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllFinancialRecords()
+    public async Task<IApiResult> GetAllFinancialRecords()
     {
         var response = await _mediator.Send(new GetAllFinancialRecordsQueryRequest());
         return HandleApiResponse(response);
@@ -51,7 +52,7 @@ public class FinancialRecordController : BaseController
 
     [HttpGet]
     [Route("record/{recordId}")]
-    public async Task<IActionResult> GetRecordById([FromRoute] long recordId)
+    public async Task<IApiResult> GetRecordById([FromRoute] long recordId)
     {
         var response = await _mediator.Send(new GetByIdFinancialRecordQueryRequest { FinancialRecordId = recordId });
         return HandleApiResponse(response);
@@ -59,7 +60,7 @@ public class FinancialRecordController : BaseController
 
     [HttpGet]
     [Route("user/{userId}")]
-    public async Task<IActionResult> GetUsersFinancialRecords([FromRoute] long userId)
+    public async Task<IApiResult> GetUsersFinancialRecords([FromRoute] long userId)
     {
         var response = await _mediator.Send(new GetUsersFinancialRecordQueryRequest { UserId = userId });
         return HandleApiResponse(response);
