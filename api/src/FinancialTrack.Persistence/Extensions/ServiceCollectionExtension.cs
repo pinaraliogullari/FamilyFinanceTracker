@@ -1,3 +1,4 @@
+using FinancialTrack.Core.Context;
 using FinancialTrack.Domain.Options;
 using FinancialTrack.Persistence.ConcreteRepositories;
 using FinancialTrack.Persistence.Context;
@@ -21,6 +22,8 @@ public static class ServiceCollectionExtension
         });
        services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
        services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+       services.AddScoped<IBaseDbContext>(sp => sp.GetRequiredService<FinancialTrackDbContext>());
+
        
 
         return services;

@@ -69,7 +69,8 @@ public static class ServiceCollectionExtension
         services.AddScoped(typeof(ICacheService<>),typeof(CacheService<>));
         services.AddScoped(typeof(IGenericUnitofWork<>), typeof(GenericUnitofWork<>));
         services.AddScoped(typeof(ICurrentUserService),typeof(CurrentUserService));
-        services.AddScoped(typeof(IBaseDbContext),typeof(BaseDbContext));
+        services.AddDbContext<IBaseDbContext, BaseDbContext>();
+
 
         return services;
     }

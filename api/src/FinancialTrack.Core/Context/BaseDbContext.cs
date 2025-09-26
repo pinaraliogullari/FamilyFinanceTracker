@@ -8,7 +8,7 @@ public  class BaseDbContext: DbContext, IBaseDbContext
 {
     private readonly ICurrentUserService _currentUserService;
 
-    protected BaseDbContext( ICurrentUserService currentUserService) 
+    public  BaseDbContext(DbContextOptions options, ICurrentUserService currentUserService) : base(options)
     {
         _currentUserService = currentUserService;
     }

@@ -1,3 +1,5 @@
+using System.Net;
+using FinancialTrack.Application.Features.User.Commands.CreateUser;
 using FinancialTrack.Application.Features.User.Commands.LoginUser;
 using FinancialTrack.Application.Features.User.Commands.LogoutUser;
 using FinancialTrack.Application.Features.User.Commands.RefreshToken;
@@ -14,7 +16,13 @@ public class AuthController : BaseController
     {
         _mediator = mediator;
     }
-
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
+    {
+        var response=await _mediator.Send(request);
+        return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
+    }
     [HttpPost]
     [Route("login")]
     public async Task<IActionResult> Login(LoginUserCommandRequest request)
@@ -36,4 +44,5 @@ public class AuthController : BaseController
         var response=await _mediator.Send(request);
         return HandleApiResponse(response);
     }
+    
 }

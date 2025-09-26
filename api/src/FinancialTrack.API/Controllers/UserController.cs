@@ -17,13 +17,7 @@ public class UserController : BaseController
         _mediator = mediator;
     }
 
-    [HttpPost]
-    [Route("create-user")]
-    public async Task<IActionResult> CreateUser(CreateUserCommandRequest request)
-    {
-        var response=await _mediator.Send(request);
-        return HandleApiResponse(response,httpStatusCode:HttpStatusCode.Created);
-    }
+   
     [HttpPost]
     [Route("update-password")]
     public async Task<IActionResult> UpdatePassword(UpdateUserPasswordCommandRequest commandRequest)
