@@ -11,7 +11,7 @@ import { BASE_API_URL } from '@/lib/config/api'
 import { API_ENDPOINTS } from '@/lib/config/api'
 
 
-const SignUp = () => {
+const SignUpPage = () => {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -90,4 +90,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default SignUpPage

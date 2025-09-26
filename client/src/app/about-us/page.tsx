@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/layout/footer";
 import { GiMoneyStack, GiWallet, GiChart } from "react-icons/gi";
 
 export default function AboutPage() {
@@ -47,10 +48,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <footer className="py-8 text-center text-gray-400 border-t border-gray-700">
-        ©{new Date().getFullYear()} Financial Tracker. All rights reserved. Made By Pinar Aliogullari Kaya.
-      </footer>
+<Footer />
+     
     </div>
   );
 }

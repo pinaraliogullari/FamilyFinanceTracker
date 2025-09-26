@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { GiMoneyStack, GiWallet, GiChart } from "react-icons/gi";
+import Footer from "@/components/layout/footer";
 
 export default function HomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -56,9 +57,7 @@ export default function HomePage() {
           </p>
         </div>
       </section>
-      <footer className="py-8 text-center text-gray-400 border-t border-gray-700">
-        ©{new Date().getFullYear()} Financial Tracker. All rights reserved. Made By Pinar Aliogullari Kaya.
-      </footer>
+      <Footer />
     </div>
   );
 }
