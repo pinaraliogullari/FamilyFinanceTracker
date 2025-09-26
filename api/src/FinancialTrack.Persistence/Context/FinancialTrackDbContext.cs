@@ -14,7 +14,7 @@ public class FinancialTrackDbContext : BaseDbContext
     private readonly ICurrentUserService _currentUserService;
 
     public FinancialTrackDbContext(DbContextOptions<FinancialTrackDbContext> options,
-        ICurrentUserService currentUserService) : base(options, currentUserService)
+        ICurrentUserService currentUserService) : base(currentUserService)
     {
         _currentUserService = currentUserService;
     }

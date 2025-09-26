@@ -10,10 +10,8 @@ public class RoleConfiguration:IEntityTypeConfiguration<Role>
     {
         builder.HasData
         (
-            new Role { Id = 1, Name = "Default User" },
-            new Role { Id = 2, Name = "Anne" },
-            new Role { Id = 3, Name = "Baba" },
-            new Role { Id = 4, Name = "Çocuk" }
+            new Role { Id = 1, Name = "Admin" },
+            new Role { Id = 2, Name = "User" }
         );
         builder.Property(r=>r.Name).IsRequired().HasMaxLength(50);
         builder.Property(r=>r.CreatedDate).IsRequired();

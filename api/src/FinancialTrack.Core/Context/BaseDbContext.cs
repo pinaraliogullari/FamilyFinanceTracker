@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinancialTrack.Core.Context;
 
-public abstract class BaseDbContext: DbContext
+public  class BaseDbContext: DbContext, IBaseDbContext
 {
     private readonly ICurrentUserService _currentUserService;
 
-    protected BaseDbContext(DbContextOptions options, ICurrentUserService currentUserService) : base(options)
+    protected BaseDbContext( ICurrentUserService currentUserService) 
     {
         _currentUserService = currentUserService;
     }
