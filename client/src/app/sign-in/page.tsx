@@ -8,7 +8,7 @@ import { Separator } from '@radix-ui/react-separator'
 import Link from 'next/link'
 import { useRouter } from "next/navigation";
 
-const SignIn = () => {
+const SignInPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,4 +61,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn;
+export default SignInPage;

@@ -9,6 +9,7 @@ import { GiMoneyStack } from "react-icons/gi";
 import { IoIosLogIn } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export default function Navbar() {
     const router = useRouter();
@@ -46,7 +47,7 @@ export default function Navbar() {
                         <NavigationMenuItem>
                             <NavigationMenuLink asChild>
                                 <Link
-                                    href="/"
+                                    href="/about-us"
                                     className="text-white font-bold !no-underline text-base hover:text-gray-300 bg-transparent p-0 rounded-none shadow-none"
                                 >
                                     About Us
@@ -55,36 +56,37 @@ export default function Navbar() {
                         </NavigationMenuItem>
 
                         {isAuthenticated && (
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger className="text-white !text-base hover:text-gray-300 bg-transparent p-0 rounded-none shadow-none">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="text-white !text-base font-bold hover:text-gray-300 bg-transparent p-0 rounded-none shadow-none">
                                     Transactions
-                                </NavigationMenuTrigger>
-                                <NavigationMenuContent className="p-2">
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="p-2">
                                     <ul className="grid gap-2 w-48">
                                         <li>
-                                            <NavigationMenuLink asChild>
-                                                <Link href="/transactions/income" className="block px-2 py-1 !text-gray-950 !no-underline hover:bg-gray-100 rounded">
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/transactions/income" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
                                                     Income Transactions
                                                 </Link>
-                                            </NavigationMenuLink>
+                                            </DropdownMenuItem>
                                         </li>
                                         <li>
-                                            <NavigationMenuLink asChild>
-                                                <Link href="/transactions/expense" className="block px-2 py-1 !text-gray-950 !no-underline hover:bg-gray-100 rounded">
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/transactions/expense" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
                                                     Expense Transactions
                                                 </Link>
-                                            </NavigationMenuLink>
+                                            </DropdownMenuItem>
                                         </li>
                                         <li>
-                                            <NavigationMenuLink asChild>
-                                                <Link href="/transactions/records" className="block px-2 py-1 !text-gray-950 !no-underline hover:bg-gray-100 rounded">
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/transactions/records" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
                                                     Transaction Records
                                                 </Link>
-                                            </NavigationMenuLink>
+                                            </DropdownMenuItem>
                                         </li>
                                     </ul>
-                                </NavigationMenuContent>
-                            </NavigationMenuItem>
+
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         )}
                     </NavigationMenuList>
                 </NavigationMenu>
