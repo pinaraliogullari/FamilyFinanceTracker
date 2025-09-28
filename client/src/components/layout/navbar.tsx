@@ -56,37 +56,41 @@ export default function Navbar() {
                         </NavigationMenuItem>
 
                         {isAuthenticated && (
-                            <DropdownMenu>
+                            <><DropdownMenu>
                                 <DropdownMenuTrigger className="text-white !text-base font-bold hover:text-gray-300 bg-transparent p-0 rounded-none shadow-none">
                                     Transactions
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="p-2">
-                                    <ul className="grid gap-2 w-48">
-                                        <li>
+                                 
                                             <DropdownMenuItem asChild>
-                                                <Link href="/transactions/income" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
-                                                    Income Transactions
+                                                <Link href="/transactions/add" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
+                                                    Add Transaction
                                                 </Link>
                                             </DropdownMenuItem>
-                                        </li>
-                                        <li>
-                                            <DropdownMenuItem asChild>
-                                                <Link href="/transactions/expense" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
-                                                    Expense Transactions
-                                                </Link>
-                                            </DropdownMenuItem>
-                                        </li>
-                                        <li>
+                                    
                                             <DropdownMenuItem asChild>
                                                 <Link href="/transactions/records" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
                                                     Transaction Records
                                                 </Link>
                                             </DropdownMenuItem>
-                                        </li>
-                                    </ul>
+                                 
 
                                 </DropdownMenuContent>
                             </DropdownMenu>
+                            <DropdownMenu>
+                                    <DropdownMenuTrigger className="text-white !text-base font-bold hover:text-gray-300 bg-transparent p-0 rounded-none shadow-none">
+                                        User Management
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="p-2">
+                                     
+                                                <DropdownMenuItem asChild>
+                                                    <Link href="/users/list" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
+                                                        User List
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                        
+                                    </DropdownMenuContent>
+                                </DropdownMenu></>
                         )}
                     </NavigationMenuList>
                 </NavigationMenu>
@@ -104,12 +108,12 @@ export default function Navbar() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                             <DropdownMenuItem asChild>
-                                <Link href="/profile" className="!text-gray-950 !no-underline cursor-pointer">
+                                <Link href="/profile/my-account" className="!text-gray-950 !no-underline cursor-pointer">
                                     My Account
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                                <Link href="/profile/records" className="!text-gray-950 !no-underline cursor-pointer">
+                                <Link href="/profile/my-records" className="!text-gray-950 !no-underline cursor-pointer">
                                     My Records
                                 </Link>
                             </DropdownMenuItem>
