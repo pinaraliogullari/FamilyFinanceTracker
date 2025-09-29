@@ -40,17 +40,19 @@ const UpdateUserRolePage = () => {
     if (id) fetchData();
   }, [id]);
 
-  const onSubmit = async () => {
-    if (!user || selectedRoleId === null) return;
+const onSubmit = async () => {
+  if (!user || selectedRoleId === null) return;
 
-    try {
-      await updateRole({ userId: user.id, roleId: selectedRoleId });
-      toast.success("Role updated successfully!");
+  try {
+    await updateRole({ userId: user.id, roleId: selectedRoleId });
+    toast.success("Role updated successfully!");
+    setTimeout(() => {
       router.push("/users/list");
-    } catch {
-      toast.error("Failed to update role");
-    }
-  };
+    }, 2000);
+  } catch {
+    toast.error("Failed to update role");
+  }
+};
 
   if (loading) return <p className="text-center mt-6">Loading...</p>;
   if (!user) return <p className="text-center mt-6">User not found</p>;
@@ -74,8 +76,8 @@ const UpdateUserRolePage = () => {
             disabled={!isAdmin}
           >
             {roles.map((role) => (
-              <option key={role.roleId} value={role.roleId}>
-                {role.roleName}
+              <option key={role.id} value={role.id}>
+                {role.name}
               </option>
             ))}
           </select>
