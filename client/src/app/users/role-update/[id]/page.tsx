@@ -91,7 +91,7 @@ const onSubmit = async () => {
         <div className="flex justify-end gap-2">
           <Button
             className="bg-gray-500 px-4 py-2 rounded hover:bg-gray-600"
-            onClick={() => router.push("/users")}
+            onClick={() => router.push("/users/list")}
           >
             Cancel
           </Button>

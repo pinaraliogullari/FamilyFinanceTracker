@@ -1,56 +1,74 @@
 "use client";
 
-import { useState } from "react";
-import axios, { AxiosResponse } from "axios";
-import { BASE_API_URL, API_ENDPOINTS } from "@/lib/config/api";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Category } from "@/services/category/categoryModels";
+import { getAllCategories } from "@/services/category/categoryservice";
+import { CreateFinancialRecordPayload } from "@/services/financialRecord/financialRecordModels";
+import { FinancialRecordType } from "@/services/financialRecord/financialRecordModels";
+
+import { createFinancialRecord } from "@/services/financialRecord/financialRecordService";
 import toast, { Toaster } from "react-hot-toast";
 
-interface AddFinancialRecordPayload {
-  amount: number;
-  categoryName: string;
-  financialRecordType: "Income" | "Expense";
-  description: string;
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  statusCode: number;
-}
-
 const AddFinancialRecordPage = () => {
-  const [amount, setAmount] = useState<number>(0);
-  const [categoryName, setCategoryName] = useState<string>("");
-  const [financialRecordType, setFinancialRecordType] = useState<"Income" | "Expense">("Income");
+  console.log("FinancialRecordType:", FinancialRecordType);
+
+  const router = useRouter();
+  const [amount, setAmount] = useState<string>("");
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [financialRecordType, setFinancialRecordType] = useState<FinancialRecordType>(FinancialRecordType.Income);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [categoryLoading, setCategoryLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await getAllCategories();
+        setCategories(data);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load categories");
+      } finally {
+        setCategoryLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!categoryId) {
+      toast.error("Please select a category");
+      return;
+    }
+
     setLoading(true);
 
-    const payload: AddFinancialRecordPayload = {
-      amount,
-      categoryName,
+    const payload: CreateFinancialRecordPayload = {
+      amount: Number(amount),
+      categoryId,
       financialRecordType,
       description,
     };
 
     try {
-      const response: AxiosResponse<ApiResponse<any>> = await axios.post(
-        `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}`,
-        payload
-      );
-
-      if (response.data.success) {
+      const response = await createFinancialRecord(payload);
+      if (response) {
         toast.success("The record has been added!");
-        setAmount(0);
-        setCategoryName("");
-        setFinancialRecordType("Income");
+        setAmount("");
+        setCategoryId(null);
+        setFinancialRecordType(FinancialRecordType.Income);
         setDescription("");
       } else {
-        toast.error(response.data.message || "The record could not be added!");
+        toast.error("The record could not be added!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+        router.push("/transactions/records");
       }
     } catch (err: any) {
       console.error(err);
@@ -63,45 +81,61 @@ const AddFinancialRecordPage = () => {
   return (
     <div className="min-h-screen bg-[#1b0918] text-white flex items-center justify-center p-8">
       <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow-md">
-        <h1 className="font-bold mb-4 text-center text-xl">Financial Record Add</h1>
+        <h1 className="font-bold mb-4 text-center text-xl">Add Financial Record</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label>
-            Tutar:
+            Amount:
             <input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              onChange={(e) => setAmount(e.target.value)}
               className="w-full p-2 rounded bg-gray-700 text-white mt-1"
+              min={0}
+              step={0.01}
               required
             />
           </label>
 
           <label>
-            Kategori:
-            <input
-              type="text"
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white mt-1"
-              required
-            />
+            Category:
+            {categoryLoading ? (
+              <p className="text-gray-400 mt-1">Loading categories...</p>
+            ) : (
+              <select
+                value={categoryId ?? ""}
+                onChange={(e) => setCategoryId(Number(e.target.value))}
+                className="w-full p-2 rounded bg-gray-700 text-white mt-1"
+                required
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </label>
-
           <label>
-            Tür:
+            Type:
             <select
               value={financialRecordType}
-              onChange={(e) => setFinancialRecordType(e.target.value as "Income" | "Expense")}
+              onChange={(e) =>
+                setFinancialRecordType(Number(e.target.value) as FinancialRecordType)
+              }
               className="w-full p-2 rounded bg-gray-700 text-white mt-1"
             >
-              <option value="Income">Gelir</option>
-              <option value="Expense">Gider</option>
+              <option value={FinancialRecordType.Income}>Income</option>
+              <option value={FinancialRecordType.Expense}>Expense</option>
             </select>
           </label>
 
+
           <label>
-            Açıklama:
+            Description:
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -115,12 +149,11 @@ const AddFinancialRecordPage = () => {
             className="bg-sky-500 p-2 rounded hover:bg-sky-600 transition-colors"
             disabled={loading}
           >
-            {loading ? "Kaydediliyor..." : "Kaydı Ekle"}
+            {loading ? "Saving..." : "Add Record"}
           </button>
         </form>
       </div>
 
-      {/* Toaster Component */}
       <Toaster position="top-right" reverseOrder={false} />
     </div>
   );

@@ -1,3 +1,5 @@
+import { ApiResponse } from "@/lib/config/api-response-type";
+
 export interface FinancialRecord {
   financialRecordId: number;
   amount: number;
@@ -7,11 +9,21 @@ export interface FinancialRecord {
   userId: number;
   userFirstName: string;
   userLastName: string;
-  financialRecordType: string; 
+  financialRecordType: FinancialRecordType;
 }
-interface AddFinancialRecordPayload {
+export enum FinancialRecordType {
+  Income = 0,
+  Expense = 1
+}
+
+
+
+export interface CreateFinancialRecordPayload {
   amount: number;
   categoryId: number;
-  financialRecordType: "Income" | "Expense";
+  financialRecordType: FinancialRecordType;
   description: string;
 }
+
+export type SingleFinancialRecordApiResponse = ApiResponse<FinancialRecord>;
+export type MultipleFinancialRecordsApiResponse = ApiResponse<FinancialRecord[]>;

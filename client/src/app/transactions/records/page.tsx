@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getFinancialRecords } from "@/services/financialRecord/financialRecordService";
+import { getFinancialRecords, deleteFinancialRecord } from "@/services/financialRecord/financialRecordService";
 import { FinancialRecord } from "@/services/financialRecord/financialRecordModels";
 import Link from "next/link";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 const RecordsPage = () => {
   const [records, setRecords] = useState<FinancialRecord[]>([]);
@@ -31,12 +32,11 @@ const RecordsPage = () => {
     fetchRecords();
   }, [filter]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this record?")) {
-      // API delete çağrısı 
-      // await axios.delete(`${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/${id}`);
+      const deletedId = await deleteFinancialRecord(id);
       toast.success("Record deleted successfully!");
-      setRecords(records.filter((r) => r.financialRecordId !== id));
+      setRecords(records.filter((r) => r.financialRecordId !== deletedId));
     }
   };
 
@@ -47,28 +47,28 @@ const RecordsPage = () => {
       <h1 className="text-3xl font-bold mb-6 text-center">Transaction Records</h1>
 
       <div className="flex gap-4 mb-6">
-        <button
+        <Button
           className={`px-4 py-2 rounded ${filter === "all" ? "bg-sky-500" : "bg-gray-700"}`}
           onClick={() => setFilter("all")}
         >
           All
-        </button>
-        <button
+        </Button>
+        <Button
           className={`px-4 py-2 rounded ${filter === "income" ? "bg-green-500" : "bg-gray-700"}`}
           onClick={() => setFilter("income")}
         >
           Income
-        </button>
-        <button
+        </Button>
+        <Button
           className={`px-4 py-2 rounded ${filter === "expense" ? "bg-red-500" : "bg-gray-700"}`}
           onClick={() => setFilter("expense")}
         >
           Expense
-        </button>
+        </Button>
 
         <Link
           href="/transactions/add"
-          className="ml-auto text-white px-4 py-2 rounde rounded bg-gray-900 !no-underline hover:bg-gray-800"
+          className="ml-auto text-white px-4 py-2 rounded bg-gray-900 !no-underline hover:bg-gray-800"
         >
           Add Transaction
         </Link>
@@ -106,12 +106,12 @@ const RecordsPage = () => {
                   >
                     <FiEdit size={20} />
                   </Link>
-                  <button
+                  <FiTrash2
+                    size={20}
+                    className="text-red-500 hover:text-red-400 cursor-pointer"
                     onClick={() => handleDelete(tx.financialRecordId)}
-                    className="text-red-500 hover:text-red-400"
-                  >
-                    <FiTrash2 size={20} />
-                  </button>
+                  />
+
                 </td>
               </tr>
             ))}

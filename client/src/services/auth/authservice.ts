@@ -2,7 +2,7 @@ import axios from 'axios';
 import { LoginCredentials, LoginResponse, RegisterCredentials, RegisterResponse, RegisterSchema,LoginSchema, LogoutResponse } from './authModels'
 import { API_ENDPOINTS, BASE_API_URL } from '@/lib/config/api';
 
-export async function register(credentials: RegisterCredentials): Promise<RegisterResponse> {
+export const register = async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
 
     RegisterSchema.parse(credentials); 
 
@@ -10,13 +10,13 @@ export async function register(credentials: RegisterCredentials): Promise<Regist
     return response.data;
 }
 
-export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
+export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
 
     LoginSchema.parse(credentials);
     const response = await axios.post<LoginResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/login`, credentials);
     return response.data;
 }
-export async function logout(): Promise<LogoutResponse> {
+export const logout = async (): Promise<LogoutResponse> => {
     const response = await axios.post<LogoutResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/logout`);
     return response.data;
 }
