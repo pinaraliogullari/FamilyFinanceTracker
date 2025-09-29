@@ -2,18 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Category } from "@/services/category/categoryModels";
-import { getAllCategories } from "@/services/category/categoryservice";
-import { CreateFinancialRecordPayload } from "@/services/financialRecord/financialRecordModels";
-import { FinancialRecordType } from "@/services/financialRecord/financialRecordModels";
-
+import { CreateFinancialRecordPayload, FinancialRecordType } from "@/services/financialRecord/financialRecordModels";
 import { createFinancialRecord } from "@/services/financialRecord/financialRecordService";
 import toast, { Toaster } from "react-hot-toast";
+import { Category, CreateCategoryPayload } from "@/services/category/categoryModels";
+import { getAllCategories, createCategory } from "@/services/category/categoryService";
 
 const AddFinancialRecordPage = () => {
-  console.log("FinancialRecordType:", FinancialRecordType);
-
   const router = useRouter();
+
   const [amount, setAmount] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -22,6 +19,12 @@ const AddFinancialRecordPage = () => {
   const [loading, setLoading] = useState(false);
   const [categoryLoading, setCategoryLoading] = useState(true);
 
+  // Modal state
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryType, setNewCategoryType] = useState<FinancialRecordType>(FinancialRecordType.Income);
+
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -34,20 +37,48 @@ const AddFinancialRecordPage = () => {
         setCategoryLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 
+  // Open modal
+  const handleOpenCategoryModal = () => setIsCategoryModalOpen(true);
+  const handleCloseCategoryModal = () => setIsCategoryModalOpen(false);
+
+  // Add new category
+  const handleAddCategory = async () => {
+    if (!newCategoryName) {
+      toast.error("Please enter a category name");
+      return;
+    }
+
+    const payload: CreateCategoryPayload = {
+      name: newCategoryName,
+      financialRecordType: newCategoryType,
+    };
+    try {
+      const newCat = await createCategory(payload);
+
+      setCategories((prev) => [...prev, newCat]);
+      setCategoryId(newCat.id);
+      setNewCategoryName("");
+      handleCloseCategoryModal();
+      toast.success("Category added!");
+      router.push("/transactions/add");
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err?.response?.data?.message || "Failed to create category");
+    }
+  };
+
+  // Submit financial record
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!categoryId) {
       toast.error("Please select a category");
       return;
     }
 
     setLoading(true);
-
     const payload: CreateFinancialRecordPayload = {
       amount: Number(amount),
       categoryId,
@@ -63,12 +94,9 @@ const AddFinancialRecordPage = () => {
         setCategoryId(null);
         setFinancialRecordType(FinancialRecordType.Income);
         setDescription("");
+        router.push("/transactions/records");
       } else {
         toast.error("The record could not be added!");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-        router.push("/transactions/records");
       }
     } catch (err: any) {
       console.error(err);
@@ -84,6 +112,7 @@ const AddFinancialRecordPage = () => {
         <h1 className="font-bold mb-4 text-center text-xl">Add Financial Record</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Amount */}
           <label>
             Amount:
             <input
@@ -97,6 +126,7 @@ const AddFinancialRecordPage = () => {
             />
           </label>
 
+          {/* Category select */}
           <label>
             Category:
             {categoryLoading ? (
@@ -104,28 +134,28 @@ const AddFinancialRecordPage = () => {
             ) : (
               <select
                 value={categoryId ?? ""}
-                onChange={(e) => setCategoryId(Number(e.target.value))}
+                onChange={(e) => {
+                  if (e.target.value === "new") handleOpenCategoryModal();
+                  else setCategoryId(Number(e.target.value));
+                }}
                 className="w-full p-2 rounded bg-gray-700 text-white mt-1"
                 required
               >
-                <option value="" disabled>
-                  Select a category
-                </option>
+                <option value="" disabled>Select a category</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
+                <option value="new">+ Create New Category...</option>
               </select>
             )}
           </label>
+
+          {/* Financial Record Type */}
           <label>
             Type:
             <select
               value={financialRecordType}
-              onChange={(e) =>
-                setFinancialRecordType(Number(e.target.value) as FinancialRecordType)
-              }
+             onChange={(e) => setFinancialRecordType(Number(e.target.value) as FinancialRecordType)}
               className="w-full p-2 rounded bg-gray-700 text-white mt-1"
             >
               <option value={FinancialRecordType.Income}>Income</option>
@@ -133,7 +163,7 @@ const AddFinancialRecordPage = () => {
             </select>
           </label>
 
-
+          {/* Description */}
           <label>
             Description:
             <textarea
@@ -144,6 +174,7 @@ const AddFinancialRecordPage = () => {
             />
           </label>
 
+          {/* Submit */}
           <button
             type="submit"
             className="bg-sky-500 p-2 rounded hover:bg-sky-600 transition-colors"
@@ -155,6 +186,44 @@ const AddFinancialRecordPage = () => {
       </div>
 
       <Toaster position="top-right" reverseOrder={false} />
+
+      {/* Modal */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-lg w-full max-w-sm">
+            <h2 className="text-lg font-bold mb-4">Create New Category</h2>
+            <input
+              type="text"
+              placeholder="Category name"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              className="w-full p-2 rounded bg-gray-700 text-white mb-2"
+            />
+            <select
+              value={newCategoryType}
+                 onChange={(e) => setFinancialRecordType(Number(e.target.value) as FinancialRecordType)}
+              className="w-full p-2 rounded bg-gray-700 text-white mb-4"
+            >
+              <option value={FinancialRecordType.Income}>Income</option>
+              <option value={FinancialRecordType.Expense}>Expense</option>
+            </select>
+            <div className="flex justify-end gap-2">
+              <button
+                className="bg-gray-600 p-2 rounded hover:bg-gray-700 transition-colors"
+                onClick={handleCloseCategoryModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-green-500 p-2 rounded hover:bg-green-600 transition-colors"
+                onClick={handleAddCategory}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
