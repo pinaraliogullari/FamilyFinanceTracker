@@ -21,6 +21,7 @@ export interface CreateFinancialRecordPayload {
   categoryId: number;
   financialRecordType: FinancialRecordType;
   description: string;
+  userId: number;
 }
 
 export interface UpdateFinancialRecordPayload{
@@ -29,6 +30,7 @@ export interface UpdateFinancialRecordPayload{
   categoryId?: number;
   financialRecordType?: FinancialRecordType;
   description?: string;
+  userId?: number;
 }
 
 export type SingleFinancialRecordApiResponse = ApiResponse<FinancialRecord>;

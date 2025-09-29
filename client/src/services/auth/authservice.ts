@@ -1,20 +1,19 @@
 import axios from 'axios';
-import { LoginCredentials, LoginResponse, RegisterCredentials, RegisterResponse, RegisterSchema,LoginSchema, LogoutResponse } from './authModels'
+import { LoginPayload, LoginResponse, SignUpPayload, SignUpResponse,LoginSchema, LogoutResponse } from './authModels'
 import { API_ENDPOINTS, BASE_API_URL } from '@/lib/config/api';
+import { SignUpApiResponse,LoginApiResponse } from './authModels';
 
-export const register = async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
+export const signup = async (payload: SignUpPayload): Promise<SignUpResponse> => {
 
-    RegisterSchema.parse(credentials); 
-
-    const response = await axios.post<RegisterResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/register`, credentials);
-    return response.data;
+    const response = await axios.post<SignUpApiResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/signup`, payload);
+    return response.data.data;
 }
 
-export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
+export const login = async (payload: LoginPayload): Promise<LoginResponse> => {
 
-    LoginSchema.parse(credentials);
-    const response = await axios.post<LoginResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/login`, credentials);
-    return response.data;
+    LoginSchema.parse(payload);
+    const response = await axios.post<LoginApiResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/login`, payload);
+    return response.data.data;
 }
 export const logout = async (): Promise<LogoutResponse> => {
     const response = await axios.post<LogoutResponse>(`${BASE_API_URL}${API_ENDPOINTS.AUTH}/logout`);
