@@ -9,17 +9,19 @@ import { Separator } from "@radix-ui/react-separator";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/auth/authservice";
-import { toast } from "react-hot-toast"; 
+import { toast } from "react-hot-toast";
 import { LoginSchema } from "@/services/auth/authModels";
 import { LoginPayload } from "@/services/auth/authModels";
 import { useAtom } from "jotai";
-import { isAuthenticatedAtom } from "@/stores/auth-atom";
+import { isAuthenticatedAtom, userRoleAtom } from "@/stores/auth-atom";
+import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const SignInPage = () => {
   const router = useRouter();
   const [, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
-
-
+  const [, setUserRole] = useAtom(userRoleAtom);
+  const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -29,15 +31,23 @@ const SignInPage = () => {
   });
 
   const onSubmit = async (data: LoginPayload) => {
+    setServerError(null); 
     try {
       const response = await login(data);
-      toast.success("Login successful"); 
-      console.log("Token set:", response.token);
-      localStorage.setItem("token", response.token.accessToken);
+      toast.success("Login successful");
+      const token = response.token.accessToken;
+      localStorage.setItem("token", token);
       setIsAuthenticated(true);
+      type TokenPayload = { role: string };
+      const decoded = jwtDecode<TokenPayload>(token);
+      setUserRole(decoded.role);
       router.push("/");
     } catch (err: any) {
-      toast.error(err?.response?.data?.Message || "Login failed");
+
+      const msg =
+        err?.response?.data?.Message ||
+        (err?.response?.data?.Errors?.[0] ?? "Login failed");
+      setServerError(msg);
     }
   };
 
@@ -53,23 +63,20 @@ const SignInPage = () => {
 
         <CardContent className="px-2 sm:px-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* API Hatası */}
+            {serverError && (
+              <div className="text-red-500 text-sm text-center">{serverError}</div>
+            )}
+
             <div>
-              <Input
-                type="email"
-                placeholder="Email"
-                {...register("email")}
-              />
+              <Input type="email" placeholder="Email" {...register("email")} />
               {errors.email && (
                 <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
               )}
             </div>
 
             <div>
-              <Input
-                type="password"
-                placeholder="Password"
-                {...register("password")}
-              />
+              <Input type="password" placeholder="Password" {...register("password")} />
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
               )}
@@ -89,7 +96,10 @@ const SignInPage = () => {
 
           <p className="text-center text-sm text-muted-foreground">
             Don't have an account?
-            <Link className="text-sky-700 ml-2 hover:underline cursor-pointer" href="/sign-up">
+            <Link
+              className="text-sky-700 ml-2 hover:underline cursor-pointer"
+              href="/sign-up"
+            >
               Sign up
             </Link>
           </p>

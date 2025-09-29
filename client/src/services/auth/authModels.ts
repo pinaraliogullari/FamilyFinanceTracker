@@ -45,5 +45,11 @@ export interface LoginResponse {
   token: Token;
 }
 
+export interface LogoutResponse {
+  message: string;
+  success: boolean;
+}
+
 export type SignUpApiResponse = ApiResponse<SignUpResponse>;
 export type LoginApiResponse = ApiResponse<LoginResponse>;
+export type LogoutApiResponse = ApiResponse<LogoutResponse>;

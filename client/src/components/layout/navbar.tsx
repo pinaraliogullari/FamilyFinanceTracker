@@ -8,16 +8,25 @@ import { FaUser } from "react-icons/fa";
 import { GiMoneyStack } from "react-icons/gi";
 import { IoIosLogIn } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { useAtom } from "jotai";
+import { isAuthenticatedAtom } from "@/stores/auth-atom";
+
 
 export default function Navbar() {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) setIsAuthenticated(true);
+    }, []);
 
-    const handleLogout = async () => {
-        // API logout + localStorage/cookie nin ikisi de yapılacak mı
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
         router.push("/sign-in");
+        toast.success("Logout successful");
     };
 
     return (
@@ -61,34 +70,34 @@ export default function Navbar() {
                                     Transactions
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="p-2">
-                                 
-                                            <DropdownMenuItem asChild>
-                                                <Link href="/transactions/add" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
-                                                    Add Transaction
-                                                </Link>
-                                            </DropdownMenuItem>
-                                    
-                                            <DropdownMenuItem asChild>
-                                                <Link href="/transactions/records" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
-                                                    Transaction Records
-                                                </Link>
-                                            </DropdownMenuItem>
-                                 
+
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/transactions/add" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
+                                            Add Transaction
+                                        </Link>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/transactions/records" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
+                                            Transaction Records
+                                        </Link>
+                                    </DropdownMenuItem>
+
 
                                 </DropdownMenuContent>
                             </DropdownMenu>
-                            <DropdownMenu>
+                                <DropdownMenu>
                                     <DropdownMenuTrigger className="text-white !text-base font-bold hover:text-gray-300 bg-transparent p-0 rounded-none shadow-none">
                                         User Management
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="p-2">
-                                     
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="/users/list" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
-                                                        User List
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                        
+
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/users/list" className="block px-2 py-1 !text-gray-950 !no-underline cursor-pointer hover:bg-gray-100 rounded">
+                                                User List
+                                            </Link>
+                                        </DropdownMenuItem>
+
                                     </DropdownMenuContent>
                                 </DropdownMenu></>
                         )}

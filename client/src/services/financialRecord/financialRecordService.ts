@@ -1,7 +1,17 @@
 import axios from "axios";
 import { BASE_API_URL, API_ENDPOINTS } from "@/lib/config/api";
-import { FinancialRecord, MultipleFinancialRecordsApiResponse, SingleFinancialRecordApiResponse, CreateFinancialRecordPayload, UpdateFinancialRecordPayload } from "./financialRecordModels";
-import { de } from "zod/v4/locales";
+import {
+  FinancialRecord,
+  MultipleFinancialRecordsApiResponse,
+  SingleFinancialRecordApiResponse,
+  CreateFinancialRecordPayload,
+  UpdateFinancialRecordPayload
+} from "./financialRecordModels";
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 export const getAllFinancialRecords = async (
   filter: "all" | "income" | "expense" = "all"
@@ -15,30 +25,38 @@ export const getAllFinancialRecords = async (
       : `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/type/${filterValue}`;
 
   try {
-    const { data } = await axios.get<MultipleFinancialRecordsApiResponse>(url);
+    const { data } = await axios.get<MultipleFinancialRecordsApiResponse>(url, {
+      headers: getAuthHeaders(),
+    });
     return data.data;
   } catch (error: any) {
     console.error("Failed to fetch financial records:", error);
-    throw new Error(error?.response?.data?.message || error?.message || "Failed to load records");
+    throw new Error(
+      error?.response?.data?.message || error?.message || "Failed to load records"
+    );
   }
-}
+};
 
 export const getFinancialRecordById = async (id: number): Promise<FinancialRecord> => {
   const { data } = await axios.get<SingleFinancialRecordApiResponse>(
-    `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/record/${id}`
+    `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/record/${id}`,
+    { headers: getAuthHeaders() }
   );
   return data.data;
-}
+};
 
 export const deleteFinancialRecord = async (id: number): Promise<number> => {
-  await axios.delete(`${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/${id}`);
+  await axios.delete(`${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/${id}`, {
+    headers: getAuthHeaders(),
+  });
   return id;
 };
 
 export const createFinancialRecord = async (payload: CreateFinancialRecordPayload): Promise<FinancialRecord> => {
   const { data } = await axios.post<SingleFinancialRecordApiResponse>(
     `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}`,
-    payload
+    payload,
+    { headers: getAuthHeaders() }
   );
   return data.data;
 };
@@ -46,7 +64,8 @@ export const createFinancialRecord = async (payload: CreateFinancialRecordPayloa
 export const updateFinancialRecord = async (payload: UpdateFinancialRecordPayload): Promise<FinancialRecord> => {
   const { data } = await axios.put<SingleFinancialRecordApiResponse>(
     `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}`,
-    payload
+    payload,
+    { headers: getAuthHeaders() }
   );
   return data.data;
 };

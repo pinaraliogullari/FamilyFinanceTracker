@@ -1,19 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {deleteFinancialRecord,getAllFinancialRecords } from "@/services/financialRecord/financialRecordService";
-
+import { deleteFinancialRecord, getAllFinancialRecords } from "@/services/financialRecord/financialRecordService";
 import { FinancialRecord } from "@/services/financialRecord/financialRecordModels";
 import Link from "next/link";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import { userRoleAtom } from "@/stores/auth-atom";
+import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 
 const RecordsPage = () => {
   const [records, setRecords] = useState<FinancialRecord[]>([]);
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userRole] = useAtom(userRoleAtom);
+
+  const router = useRouter();
+  const handleEditClick = (id: number) => {
+    if (userRole !== "Admin") {
+      toast.error("Yetkiniz yok");
+      return;
+    }
+
+    router.push(`/transactions/update/${id}`);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    if (userRole !== "Admin") {
+      toast.error("Yetkiniz yok");
+      return;
+    }
+    handleDelete(id);
+  };
 
   const fetchRecords = async () => {
     setLoading(true);
@@ -102,16 +123,15 @@ const RecordsPage = () => {
                 <td className="px-4 py-2 border-b border-gray-600">{tx.description}</td>
                 <td className="px-4 py-2 border-b border-gray-600">{`${tx.userFirstName} ${tx.userLastName}`}</td>
                 <td className="px-4 py-2 border-b border-gray-600 flex gap-2">
-                  <Link
-                    href={`/transactions/update/${tx.financialRecordId}`}
-                    className="text-yellow-400 hover:text-yellow-300"
-                  >
-                    <FiEdit size={20} />
-                  </Link>
+                  <FiEdit
+                    size={20}
+                    className="text-yellow-400 hover:text-yellow-300 cursor-pointer"
+                    onClick={() => handleEditClick(tx.financialRecordId)}
+                  />
                   <FiTrash2
                     size={20}
                     className="text-red-500 hover:text-red-400 cursor-pointer"
-                    onClick={() => handleDelete(tx.financialRecordId)}
+                    onClick={() => handleDeleteClick(tx.financialRecordId)}
                   />
 
                 </td>

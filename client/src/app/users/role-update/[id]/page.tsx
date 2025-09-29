@@ -47,7 +47,7 @@ const onSubmit = async () => {
     await updateRole({ userId: user.id, roleId: selectedRoleId });
     toast.success("Role updated successfully!");
     setTimeout(() => {
-      router.push("/users/list");
+      router.push("/sign-in");
     }, 2000);
   } catch {
     toast.error("Failed to update role");

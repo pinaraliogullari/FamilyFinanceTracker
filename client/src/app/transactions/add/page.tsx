@@ -19,12 +19,10 @@ const AddFinancialRecordPage = () => {
   const [loading, setLoading] = useState(false);
   const [categoryLoading, setCategoryLoading] = useState(true);
 
-  // Modal state
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryType, setNewCategoryType] = useState<FinancialRecordType>(FinancialRecordType.Income);
 
-  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -40,11 +38,9 @@ const AddFinancialRecordPage = () => {
     fetchCategories();
   }, []);
 
-  // Open modal
   const handleOpenCategoryModal = () => setIsCategoryModalOpen(true);
   const handleCloseCategoryModal = () => setIsCategoryModalOpen(false);
 
-  // Add new category
   const handleAddCategory = async () => {
     if (!newCategoryName) {
       toast.error("Please enter a category name");
@@ -58,19 +54,22 @@ const AddFinancialRecordPage = () => {
     try {
       const newCat = await createCategory(payload);
 
+      // Yeni kategoriyi listeye ekle
       setCategories((prev) => [...prev, newCat]);
+
+      // Eklenen kategoriyi otomatik seç
       setCategoryId(newCat.id);
+
       setNewCategoryName("");
+      setNewCategoryType(FinancialRecordType.Income);
       handleCloseCategoryModal();
       toast.success("Category added!");
-      router.push("/transactions/add");
     } catch (err: any) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Failed to create category");
     }
   };
 
-  // Submit financial record
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!categoryId) {
@@ -112,7 +111,6 @@ const AddFinancialRecordPage = () => {
         <h1 className="font-bold mb-4 text-center text-xl">Add Financial Record</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Amount */}
           <label>
             Amount:
             <input
@@ -126,7 +124,6 @@ const AddFinancialRecordPage = () => {
             />
           </label>
 
-          {/* Category select */}
           <label>
             Category:
             {categoryLoading ? (
@@ -150,12 +147,11 @@ const AddFinancialRecordPage = () => {
             )}
           </label>
 
-          {/* Financial Record Type */}
           <label>
             Type:
             <select
               value={financialRecordType}
-             onChange={(e) => setFinancialRecordType(Number(e.target.value) as FinancialRecordType)}
+              onChange={(e) => setFinancialRecordType(Number(e.target.value) as FinancialRecordType)}
               className="w-full p-2 rounded bg-gray-700 text-white mt-1"
             >
               <option value={FinancialRecordType.Income}>Income</option>
@@ -163,7 +159,6 @@ const AddFinancialRecordPage = () => {
             </select>
           </label>
 
-          {/* Description */}
           <label>
             Description:
             <textarea
@@ -174,7 +169,6 @@ const AddFinancialRecordPage = () => {
             />
           </label>
 
-          {/* Submit */}
           <button
             type="submit"
             className="bg-sky-500 p-2 rounded hover:bg-sky-600 transition-colors"
@@ -187,7 +181,6 @@ const AddFinancialRecordPage = () => {
 
       <Toaster position="top-right" reverseOrder={false} />
 
-      {/* Modal */}
       {isCategoryModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-900 p-6 rounded-lg w-full max-w-sm">
@@ -201,7 +194,7 @@ const AddFinancialRecordPage = () => {
             />
             <select
               value={newCategoryType}
-                 onChange={(e) => setFinancialRecordType(Number(e.target.value) as FinancialRecordType)}
+              onChange={(e) => setNewCategoryType(Number(e.target.value) as FinancialRecordType)}
               className="w-full p-2 rounded bg-gray-700 text-white mb-4"
             >
               <option value={FinancialRecordType.Income}>Income</option>

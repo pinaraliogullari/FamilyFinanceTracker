@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { GiMoneyStack, GiWallet, GiChart } from "react-icons/gi";
 import Footer from "@/components/layout/footer";
+import { useAtom } from "jotai";
+import { isAuthenticatedAtom } from "@/stores/auth-atom";
 
 export default function HomePage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
   return (
     <div className="min-h-screen bg-[#1b0918] text-white flex flex-col">
       <section className="flex flex-col items-center justify-center text-center py-24 px-4 bg-gradient-to-b from-[#1b0918] to-[#2b0f30]">
