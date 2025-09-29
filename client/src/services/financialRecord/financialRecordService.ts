@@ -1,8 +1,9 @@
 import axios from "axios";
 import { BASE_API_URL, API_ENDPOINTS } from "@/lib/config/api";
-import { FinancialRecord, MultipleFinancialRecordsApiResponse, SingleFinancialRecordApiResponse, CreateFinancialRecordPayload } from "./financialRecordModels";
+import { FinancialRecord, MultipleFinancialRecordsApiResponse, SingleFinancialRecordApiResponse, CreateFinancialRecordPayload, UpdateFinancialRecordPayload } from "./financialRecordModels";
+import { de } from "zod/v4/locales";
 
-export const getFinancialRecords = async (
+export const getAllFinancialRecords = async (
   filter: "all" | "income" | "expense" = "all"
 ): Promise<FinancialRecord[]> => {
   const filterValue =
@@ -22,6 +23,13 @@ export const getFinancialRecords = async (
   }
 }
 
+export const getFinancialRecordById = async (id: number): Promise<FinancialRecord> => {
+  const { data } = await axios.get<SingleFinancialRecordApiResponse>(
+    `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/record/${id}`
+  );
+  return data.data;
+}
+
 export const deleteFinancialRecord = async (id: number): Promise<number> => {
   await axios.delete(`${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/${id}`);
   return id;
@@ -35,3 +43,10 @@ export const createFinancialRecord = async (payload: CreateFinancialRecordPayloa
   return data.data;
 };
 
+export const updateFinancialRecord = async (payload: UpdateFinancialRecordPayload): Promise<FinancialRecord> => {
+  const { data } = await axios.put<SingleFinancialRecordApiResponse>(
+    `${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}`,
+    payload
+  );
+  return data.data;
+};

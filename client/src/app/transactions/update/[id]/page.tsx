@@ -2,63 +2,69 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { BASE_API_URL, API_ENDPOINTS } from "@/lib/config/api";
+import {FinancialRecord,UpdateFinancialRecordPayload,FinancialRecordType} from "@/services/financialRecord/financialRecordModels";
+import {updateFinancialRecord,getFinancialRecordById} from "@/services/financialRecord/financialRecordService";
+import { getAllCategories } from "@/services/category/categoryService";
 
-interface FinancialRecord {
-  financialRecordId: number;
-  amount: number;
-  categoryId: number;
-  categoryName: string;
-  financialRecordType: "Income" | "Expense";
-  description: string;
+interface Category {
+  id: number;
+  name: string;
 }
 
 const UpdateFinancialRecordPage = () => {
   const router = useRouter();
-  const params = useParams(); // URL param: id
-  const recordId = params.id;
+  const { id } = useParams();
+  const recordId = Number(id);
 
   const [record, setRecord] = useState<FinancialRecord | null>(null);
-  const [amount, setAmount] = useState(0);
-  const [categoryId, setCategoryId] = useState(1);
-  const [financialRecordType, setFinancialRecordType] = useState<"Income" | "Expense">("Income");
+  const [amount, setAmount] = useState("0"); // string olarak
+  const [categoryId, setCategoryId] = useState(0);
+  const [financialRecordType, setFinancialRecordType] = useState<FinancialRecordType>(
+    FinancialRecordType.Income
+  );
   const [description, setDescription] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchRecord = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/${recordId}`);
-        const data: FinancialRecord = response.data;
-        setRecord(data);
-        setAmount(data.amount);
-        setCategoryId(data.categoryId);
-        setFinancialRecordType(data.financialRecordType);
-        setDescription(data.description);
+        const [recordData, categoryData] = await Promise.all([
+          getFinancialRecordById(recordId),
+          getAllCategories(), // tüm kategorileri çekiyoruz
+        ]);
+
+        setRecord(recordData);
+        setAmount(recordData.amount.toString());
+        setCategoryId(recordData.categoryId);
+        setFinancialRecordType(recordData.financialRecordType);
+        setDescription(recordData.description);
+        setCategories(categoryData);
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load record.");
+        toast.error("Failed to load data.");
       } finally {
         setLoading(false);
       }
     };
-
-    fetchRecord();
+    fetchData();
   }, [recordId]);
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.put(`${BASE_API_URL}${API_ENDPOINTS.FINANCIAL_RECORD}/${recordId}`, {
-        amount,
+      const payload: UpdateFinancialRecordPayload = {
+        financialRecordId: recordId,
+        amount: Number(amount),
         categoryId,
         financialRecordType,
         description,
-      });
+       userId: record?.userId,
+      };
+      await updateFinancialRecord(payload);
       toast.success("Record updated successfully!");
       router.push("/transactions/records");
     } catch (err) {
@@ -84,28 +90,34 @@ const UpdateFinancialRecordPage = () => {
           <input
             type="number"
             value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
+            onChange={(e) => setAmount(e.target.value)} // string olarak alıyoruz
             className="w-full p-2 rounded bg-gray-700 text-white mt-1"
             required
           />
         </label>
 
         <label>
-          Category ID:
-          <input
-            type="number"
+          Category:
+          <select
             value={categoryId}
             onChange={(e) => setCategoryId(Number(e.target.value))}
             className="w-full p-2 rounded bg-gray-700 text-white mt-1"
-            required
-          />
+          >
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>
           Type:
           <select
             value={financialRecordType}
-            onChange={(e) => setFinancialRecordType(e.target.value as "Income" | "Expense")}
+            onChange={(e) =>
+              setFinancialRecordType(Number(e.target.value as "Income" | "Expense"))
+            }
             className="w-full p-2 rounded bg-gray-700 text-white mt-1"
           >
             <option value="Income">Income</option>

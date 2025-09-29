@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getFinancialRecords, deleteFinancialRecord } from "@/services/financialRecord/financialRecordService";
+import {deleteFinancialRecord,getAllFinancialRecords } from "@/services/financialRecord/financialRecordService";
+
 import { FinancialRecord } from "@/services/financialRecord/financialRecordModels";
 import Link from "next/link";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
@@ -18,8 +19,9 @@ const RecordsPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getFinancialRecords(filter);
+      const data = await getAllFinancialRecords(filter);
       setRecords(data);
+      console.log(data);
     } catch (err) {
       console.error(err);
       setError("Failed to load records");

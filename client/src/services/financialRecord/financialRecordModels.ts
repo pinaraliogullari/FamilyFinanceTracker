@@ -16,13 +16,19 @@ export enum FinancialRecordType {
   Expense = 1
 }
 
-
-
 export interface CreateFinancialRecordPayload {
   amount: number;
   categoryId: number;
   financialRecordType: FinancialRecordType;
   description: string;
+}
+
+export interface UpdateFinancialRecordPayload{
+  financialRecordId: number;
+  amount?: number;
+  categoryId?: number;
+  financialRecordType?: FinancialRecordType;
+  description?: string;
 }
 
 export type SingleFinancialRecordApiResponse = ApiResponse<FinancialRecord>;
