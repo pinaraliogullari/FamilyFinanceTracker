@@ -3,9 +3,11 @@ using FinancialTrack.Application.Features.FinancialRecord.Commands.CreateFinanci
 using FinancialTrack.Application.Features.FinancialRecord.Commands.DeleteFinancialRecord;
 using FinancialTrack.Application.Features.FinancialRecord.Commands.UpdateFinancialRecord;
 using FinancialTrack.Application.Features.FinancialRecord.Queries.GetAllFinancialRecords;
-using FinancialTrack.Application.Features.FinancialRecord.Queries.GetByIdFinancialRecord;
-using FinancialTrack.Application.Features.FinancialRecord.Queries.GetUsersFinancialRecords;
+using FinancialTrack.Application.Features.FinancialRecord.Queries.GetFinancialRecordById;
+using FinancialTrack.Application.Features.FinancialRecord.Queries.GetFinancialRecordsByType;
+using FinancialTrack.Application.Features.FinancialRecord.Queries.GetFinancialRecordsByUserId;
 using FinancialTrack.Core.Results;
+using FinancialTrack.Domain.Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,7 +56,7 @@ public class FinancialRecordController : BaseController
     [Route("record/{recordId}")]
     public async Task<IApiResult> GetRecordById([FromRoute] long recordId)
     {
-        var response = await _mediator.Send(new GetByIdFinancialRecordQueryRequest { FinancialRecordId = recordId });
+        var response = await _mediator.Send(new GetFinancialRecordByIdQueryRequest { FinancialRecordId = recordId });
         return HandleApiResponse(response);
     }
 
@@ -62,7 +64,24 @@ public class FinancialRecordController : BaseController
     [Route("user/{userId}")]
     public async Task<IApiResult> GetUsersFinancialRecords([FromRoute] long userId)
     {
-        var response = await _mediator.Send(new GetUsersFinancialRecordQueryRequest { UserId = userId });
+        var response = await _mediator.Send(new GetFinancialRecordsByUserIdQueryRequest() { UserId = userId });
+        return HandleApiResponse(response);
+    }
+
+    [HttpGet]
+    [Route("type/{recordType}")]
+    public async Task<IApiResult> GetFinancialRecordsByType([FromRoute] FinancialRecordType recordType)
+    {
+        var response = await _mediator.Send(new GetFinancialRecordsByTypeQueryRequest
+            { FinancialRecordType = recordType });
+        return HandleApiResponse(response);
+    }
+
+    [HttpGet]
+    [Route("my-records")]
+    public async Task<IApiResult> GetMyFinancialRecords()
+    {
+        var response = await _mediator.Send(new GetFinancialRecordsByUserIdQueryRequest());
         return HandleApiResponse(response);
     }
 }

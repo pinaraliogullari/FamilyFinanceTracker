@@ -21,7 +21,11 @@ public class
         CancellationToken cancellationToken)
     {
         var financialRecords =
-            await _uow.GetReadRepository<Domain.Entities.FinancialRecord>().GetAll(false).ToListAsync();
+            await _uow.GetReadRepository<Domain.Entities.FinancialRecord>()
+                .GetAll()
+                .Include(x=>x.User)
+                .Include(x=>x.Category)
+               .ToListAsync();
         if (financialRecords == null || !financialRecords.Any())
             throw new NotFoundException("Financial Record Not Found");
         return financialRecords.Select(x => new GetAllFinancialRecordsQueryResponse()
@@ -30,7 +34,12 @@ public class
             Amount = x.Amount,
             CategoryId = x.CategoryId,
             Description = x.Description,
-            UserId = x.UserId
+            UserId = x.UserId,
+            UserFirstName = x.User.FirstName,
+            UserLastName = x.User.LastName,
+            CategoryName = x.Category.Name,
+            FinancialRecordType = x.FinancialRecordType.ToString()
+            
         }).ToList();
     }
 }

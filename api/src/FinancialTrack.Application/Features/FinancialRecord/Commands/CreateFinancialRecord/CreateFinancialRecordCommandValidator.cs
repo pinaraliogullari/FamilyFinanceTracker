@@ -11,12 +11,13 @@ public class CreateFinancialRecordCommandValidator:AbstractValidator<CreateFinan
 
         RuleFor(x => x.CategoryId)
             .GreaterThan(0).WithMessage("CategoryId must be a valid ID.");
+        RuleFor(x => x.FinancialRecordType)
+            .IsInEnum()
+            .WithMessage("FinancialRecordType must be a valid value.");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("Description is required.")
             .MaximumLength(500).WithMessage("Description cannot exceed 500 characters.");
 
-        RuleFor(x => x.UserId)
-            .GreaterThan(0).WithMessage("UserId must be a valid ID."); 
     }
 }

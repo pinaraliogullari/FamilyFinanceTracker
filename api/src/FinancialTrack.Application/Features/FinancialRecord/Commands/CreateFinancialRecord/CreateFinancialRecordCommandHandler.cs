@@ -1,3 +1,4 @@
+using FinancialTrack.Core.AbstractServices;
 using FinancialTrack.Core.UoW;
 using FinancialTrack.Persistence.Context;
 using MediatR;
@@ -8,22 +9,28 @@ public class CreateFinancialRecordCommandHandler : IRequestHandler<CreateFinanci
     CreateFinancialRecordCommandResponse>
 {
     private readonly IGenericUnitofWork<FinancialTrackDbContext> _uow;
+    private readonly ICurrentUserService _currentUserService;
 
-    public CreateFinancialRecordCommandHandler(IGenericUnitofWork<FinancialTrackDbContext> uow)
+    public CreateFinancialRecordCommandHandler(
+        IGenericUnitofWork<FinancialTrackDbContext> uow,
+        ICurrentUserService currentUserService)
     {
         _uow = uow;
+        _currentUserService = currentUserService;
     }
 
     public async Task<CreateFinancialRecordCommandResponse> Handle(
         CreateFinancialRecordCommandRequest request,
         CancellationToken cancellationToken)
     {
+        var userId = _currentUserService.UserId??"6";
         var financialRecord = new Domain.Entities.FinancialRecord()
         {
             Amount = request.Amount,
             Description = request.Description,
-            UserId = request.UserId,
-            CategoryId = request.CategoryId
+            UserId = long.Parse(userId),
+            CategoryId = request.CategoryId,
+            FinancialRecordType = request.FinancialRecordType
         };
         await _uow.GetWriteRepository<Domain.Entities.FinancialRecord>().AddAsync(financialRecord);
         return new CreateFinancialRecordCommandResponse

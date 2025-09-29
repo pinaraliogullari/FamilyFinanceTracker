@@ -32,7 +32,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest
             LastName = request.Lastname,
             Email = request.Email,
             Password = hashPassword,
-            RoleId = 1,
+            RoleId = 2,
         };
         await _uow.GetWriteRepository<Domain.Entities.User>().AddAsync(newUser);
 

@@ -1,6 +1,6 @@
-namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetByIdFinancialRecord;
+namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetFinancialRecordsByUserId;
 
-public class GetByIdFinancialRecordQueryResponse
+public class GetFinancialRecordsByUserIdQueryResponse
 {
     public long FinancialRecordId { get; set; }
     public decimal Amount { get; set; }

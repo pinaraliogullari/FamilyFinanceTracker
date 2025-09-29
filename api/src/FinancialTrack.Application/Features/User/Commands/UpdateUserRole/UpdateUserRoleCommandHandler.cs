@@ -1,5 +1,4 @@
 using FinancialTrack.Application.Exceptions;
-using FinancialTrack.Application.Features.User.Commands.UpdateUser;
 using FinancialTrack.Core.UoW;
 using FinancialTrack.Persistence.Context;
 using MediatR;

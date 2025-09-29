@@ -1,4 +1,3 @@
-using FinancialTrack.Application.Features.User.Commands.UpdateUser;
 using FinancialTrack.Core.Markers;
 
 namespace FinancialTrack.Application.Features.User.Commands.UpdateUserRole;

@@ -1,4 +1,4 @@
-namespace FinancialTrack.Application.Features.User.Commands.UpdateUser;
+namespace FinancialTrack.Application.Features.User.Commands.UpdateUserRole;
 
 public class UpdateUserRoleCommandResponse
 {

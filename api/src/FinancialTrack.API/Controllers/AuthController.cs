@@ -18,7 +18,7 @@ public class AuthController : BaseController
         _mediator = mediator;
     }
     [HttpPost]
-    [Route("register")]
+    [Route("signup")]
     public async Task<IApiResult> CreateUser([FromBody]CreateUserCommandRequest request)
     {
         var response=await _mediator.Send(request);

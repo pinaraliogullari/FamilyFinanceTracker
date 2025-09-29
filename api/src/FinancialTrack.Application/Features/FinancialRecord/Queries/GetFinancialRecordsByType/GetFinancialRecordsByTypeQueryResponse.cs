@@ -1,8 +1,6 @@
-using FinancialTrack.Domain.Entities.Enums;
+namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetFinancialRecordsByType;
 
-namespace FinancialTrack.Application.Features.FinancialRecord.Queries.GetAllFinancialRecords;
-
-public class GetAllFinancialRecordsQueryResponse
+public class GetFinancialRecordsByTypeQueryResponse
 {
     public long FinancialRecordId { get; set; }
     public decimal Amount { get; set; }
@@ -12,5 +10,5 @@ public class GetAllFinancialRecordsQueryResponse
     public string FinancialRecordType { get; set; }
     public long UserId { get; set; }
     public string UserFirstName { get; set; }
-    public string UserLastName { get; set; }
+    public string UserLastName { get; set; } 
 }
