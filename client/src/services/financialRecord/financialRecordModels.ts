@@ -21,7 +21,6 @@ export interface CreateFinancialRecordPayload {
   categoryId: number;
   financialRecordType: FinancialRecordType;
   description: string;
-  userId: number;
 }
 
 export interface UpdateFinancialRecordPayload{

@@ -13,3 +13,11 @@ export const getMyProfile = async (): Promise<UserProfile> => {
 
   return res.data.data;
 };
+
+export const updateMyProfile = async (payload: UserProfile): Promise<UserProfile> => {
+  const res = await axios.put<UserProfileApiResponse>(`${BASE_API_URL}${API_ENDPOINTS.USER}/update-profile`, payload, {
+    headers: getAuthHeaders(),
+  }); 
+
+  return res.data.data;
+};  

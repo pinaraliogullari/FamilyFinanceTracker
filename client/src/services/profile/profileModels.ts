@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/lib/config/api-response-type";
 
 export interface UserProfile {
-  id: number;
+  userId: number;
   firstName: string;
   lastName: string;
   email: string;

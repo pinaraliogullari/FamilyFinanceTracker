@@ -1,25 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { UserProfile } from "@/services/profile/profileModels";
-import { getMyProfile } from "@/services/profile/profileService";
+import { getMyProfile, updateMyProfile } from "@/services/profile/profileService";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      setLoading(true);
       try {
-        const res = await getMyProfile();
-        setProfile(res);
+        const data = await getMyProfile();
+        setProfile(data);
       } catch {
-        toast.error("Failed to load profile.");
+        toast.error("Failed to load profile."); 
       } finally {
         setLoading(false);
       }
@@ -36,10 +34,10 @@ const ProfilePage = () => {
     if (!profile) return;
     setUpdating(true);
     try {
-      await axios.put("/api/update-profile", profile);
-      toast.success("Profile updated successfully!");
+      await updateMyProfile(profile);
+      toast.success("Profile updated successfully!"); 
     } catch {
-      toast.error("Profile update failed.");
+      toast.error("Profile update failed."); 
     } finally {
       setUpdating(false);
     }
@@ -49,7 +47,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex min-h-screen w-full bg-gray-100">
-      {/* Sol Menü */}
+  
       <div className="w-1/4 bg-white shadow-md p-6 flex flex-col">
         <h2 className="font-bold text-xl mb-6 text-gray-800">My Account</h2>
         <ul className="flex flex-col gap-4">
@@ -62,7 +60,6 @@ const ProfilePage = () => {
         </ul>
       </div>
 
-      {/* Sağ İçerik */}
       <div className="flex-1 bg-gray-50 p-8 overflow-y-auto">
         {profile && (
           <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
@@ -72,7 +69,7 @@ const ProfilePage = () => {
               <label className="block mb-1 text-gray-700">First Name</label>
               <input
                 name="firstName"
-                value={profile.firstName}
+                value={profile.firstName || ""}
                 onChange={handleChange}
                 className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
@@ -82,7 +79,7 @@ const ProfilePage = () => {
               <label className="block mb-1 text-gray-700">Last Name</label>
               <input
                 name="lastName"
-                value={profile.lastName}
+                value={profile.lastName || ""}
                 onChange={handleChange}
                 className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
@@ -92,7 +89,7 @@ const ProfilePage = () => {
               <label className="block mb-1 text-gray-700">Email</label>
               <input
                 name="email"
-                value={profile.email}
+                value={profile.email || ""}
                 onChange={handleChange}
                 className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
@@ -100,24 +97,15 @@ const ProfilePage = () => {
 
             <div className="mb-4">
               <label className="block mb-1 text-gray-700">Role</label>
-              {profile.roleName === "Admin" ? (
-                <select
-                  name="roleName"
-                  value={profile.roleName}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
-                </select>
-              ) : (
-                <input
-                  name="roleName"
-                  value={profile.roleName}
-                  readOnly
-                  className="w-full px-3 py-2 rounded bg-gray-100 border border-gray-300 text-gray-500 cursor-not-allowed"
-                />
-              )}
+              <select
+                name="roleName"
+                value={profile.roleName || ""}
+                onChange={handleChange}
+                className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+              </select>
             </div>
 
             <button
