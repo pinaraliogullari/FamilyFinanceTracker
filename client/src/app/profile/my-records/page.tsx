@@ -1,69 +1,75 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { Card, CardContent } from "@/components/ui/card";
+import { getMyRecords } from "@/services/profile/profileService";
+import { MyFinancialRecord, FinancialRecordType } from "@/services/profile/profileModels";
+import toast, { Toaster } from "react-hot-toast";
 
-interface MyRecord {
-  financialRecordId: number;
-  amount: number;
-  categoryId: number;
-  categoryName: string;
-  description: string;
-  financialRecordType: string;
-}
-
-const GetMyRecordsPage = () => {
-  const [records, setRecords] = useState<MyRecord[]>([]);
+const MyRecordsPage = () => {
+  const [records, setRecords] = useState<MyFinancialRecord[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMyRecords = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getMyRecords();
+      setRecords(data);
+      if (data.length === 0) toast("Any records found.");
+    } catch (err) {
+      console.error(err);
+      setError("An error occurred while loading records");
+      toast.error("Failed to load records!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchRecords = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get<MyRecord[]>("/api/financial-record/my-records");
-        setRecords(res.data);
-      } catch (err) {
-        toast.error("Failed to load financial records");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRecords();
+    fetchMyRecords();
   }, []);
 
-  if (loading) return <p className="text-center mt-6">Loading...</p>;
-
   return (
-    <div className="max-w-4xl mx-auto mt-8">
-      <h1 className="text-[20px] font-bold mb-4 text-center">My Financial Records</h1>
+    <div className="min-h-screen bg-gray-100 text-gray-900 p-8">
+      <Toaster position="top-right" reverseOrder={false} />
+      <h1 className="text-3xl font-bold mb-6 text-center">My Financial Records</h1>
 
-      {records.length === 0 ? (
-        <p className="text-center text-gray-400">No financial records found.</p>
-      ) : (
-        <div className="grid gap-4">
-          {records.map((record) => (
-            <Card key={record.financialRecordId} className="bg-gray-900 text-white border border-gray-700">
-              <CardContent className="p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-lg font-semibold">{record.categoryName}</p>
-                    <p className="text-sm text-gray-400">{record.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xl font-bold">{record.amount} ₺</p>
-                    <p className="text-sm text-gray-400">{record.financialRecordType}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {!loading && !error && records.length > 0 && (
+        <table className="w-full text-left border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="px-4 py-2 border-b">ID</th>
+              <th className="px-4 py-2 border-b">Amount</th>
+              <th className="px-4 py-2 border-b">Category</th>
+              <th className="px-4 py-2 border-b">Type</th>
+              <th className="px-4 py-2 border-b">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.map((record) => (
+              <tr key={record.financialRecordId} className="hover:bg-gray-100">
+                <td className="px-4 py-2 border-b">{record.financialRecordId}</td>
+                <td className="px-4 py-2 border-b">{record.amount}</td>
+                <td className="px-4 py-2 border-b">{record.categoryName}</td>
+                <td className="px-4 py-2 border-b">
+                  {record.financialRecordType === FinancialRecordType.Income ? "Income" : "Expense"}
+                </td>
+                <td className="px-4 py-2 border-b">{record.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {!loading && !error && records.length === 0 && (
+        <p className="text-center mt-4">No records found.</p>
       )}
     </div>
   );
 };
 
-export default GetMyRecordsPage;
+export default MyRecordsPage;

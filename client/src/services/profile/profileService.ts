@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserProfile,UserProfileApiResponse } from "./profileModels";
+import { UserProfile,UserProfileApiResponse,MyFinancialRecord,MyFinancialRecordsApiResponse } from "./profileModels";
 import { API_ENDPOINTS, BASE_API_URL } from "@/lib/config/api";
 
 const getAuthHeaders = () => {
@@ -21,3 +21,10 @@ export const updateMyProfile = async (payload: UserProfile): Promise<UserProfile
 
   return res.data.data;
 };  
+
+export const getMyRecords = async (): Promise<MyFinancialRecord[]> => {
+  const res = await axios.get<MyFinancialRecordsApiResponse>(`${BASE_API_URL}${API_ENDPOINTS.USER}/my-records`, {
+    headers: getAuthHeaders(),
+  });
+  return res.data.data;
+};
