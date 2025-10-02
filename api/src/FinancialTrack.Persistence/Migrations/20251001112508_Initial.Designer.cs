@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinancialTrack.Persistence.Migrations
 {
     [DbContext(typeof(FinancialTrackDbContext))]
-    [Migration("20250928061600_financialrecordNullableFields")]
-    partial class financialrecordNullableFields
+    [Migration("20251001112508_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,108 @@ namespace FinancialTrack.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 1,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Giyim",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 1,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Yiyecek",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 1,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Ulaşım",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 1,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Sağlık",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 1,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Eğlence",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 0,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Maaş",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 0,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Freelance",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 0,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Yatırım",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 0,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Kira Geliri",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FinancialRecordType = 0,
+                            IsCustom = false,
+                            IsDeleted = false,
+                            Name = "Diğer Gelir",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("FinancialTrack.Domain.Entities.FinancialRecord", b =>
@@ -88,6 +190,9 @@ namespace FinancialTrack.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<int>("FinancialRecordType")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -198,7 +303,7 @@ namespace FinancialTrack.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<long?>("RoleId")
+                    b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("UpdatedById")
@@ -252,7 +357,9 @@ namespace FinancialTrack.Persistence.Migrations
                 {
                     b.HasOne("FinancialTrack.Domain.Entities.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Role");
                 });

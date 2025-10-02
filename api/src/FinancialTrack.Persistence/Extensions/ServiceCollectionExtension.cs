@@ -24,7 +24,7 @@ public static class ServiceCollectionExtension
        services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
        services.AddScoped<IBaseDbContext>(sp => sp.GetRequiredService<FinancialTrackDbContext>());
 
-       
+     
 
         return services;
     }

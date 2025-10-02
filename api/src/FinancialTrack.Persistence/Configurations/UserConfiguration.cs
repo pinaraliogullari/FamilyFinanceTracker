@@ -13,11 +13,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Email).IsRequired().HasMaxLength(50);
         builder.Property(u => u.Password).IsRequired().HasMaxLength(256);
         builder.Property(u => u.CreatedDate).IsRequired();
-        
-        builder.HasMany(u=>u.FinancialRecords)
-            .WithOne(fr=>fr.User)
-            .HasForeignKey(fr=>fr.UserId);
 
-    
+        builder.HasMany(u => u.FinancialRecords)
+            .WithOne(fr => fr.User)
+            .HasForeignKey(fr => fr.UserId);
+
+
     }
 }
